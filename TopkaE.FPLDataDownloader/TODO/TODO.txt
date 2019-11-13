@@ -1,0 +1,11 @@
+﻿- Add [JsonProperty(PropertyName = "xxx")] to all input models
+
+- Review all object type props in the models 
+
+- Add some kind of auth for updating the data
+
+- Add loger
+
+- DI mechanism for the controllers
+
+--- parallelism in updater

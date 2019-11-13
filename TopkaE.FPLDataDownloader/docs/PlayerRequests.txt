@@ -1,0 +1,6 @@
+﻿# Get players
+	## Without parameters
+	- https://localhost:5001/api/players - returns all players
+	## points parameter
+	- https://localhost:5001/api/players?points=50 - returns all players with more than 50 points
+	- 

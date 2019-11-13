@@ -1,0 +1,11 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/TopkaE.FPLDataDownloader/bin
+/TopkaE.FPLDataDownloader.HttpRequests/bin
+/TopkaE.FPLDataDownloader.Models/bin
+/TopkaE.FPLDataDownloader/obj
+/TopkaE.FPLDataDownloader.HttpRequests/obj
+/TopkaE.FPLDataDownloader.Models/obj
+/.vs
