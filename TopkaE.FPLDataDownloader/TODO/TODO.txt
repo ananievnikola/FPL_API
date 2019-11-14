@@ -8,4 +8,6 @@
 
 - DI mechanism for the controllers
 
+- Rewrite requesters so the singleton is actually "singleton per user"
+
 --- parallelism in updater

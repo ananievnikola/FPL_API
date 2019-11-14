@@ -10,8 +10,8 @@ namespace TopkaE.FPLDataDownloader.HttpRequests.Requesters
 {
     public class AuthenticationRequester : HttpClientWrapperBase
     {
-        private FormUrlEncodedContent content;
-        public AuthenticationRequester(string pass, string login) : base()
+        private FormUrlEncodedContent _Content;
+        public AuthenticationRequester(string login, string pass) : base()
         {
             SetUpAuthParams(pass, login);
         }
@@ -19,17 +19,17 @@ namespace TopkaE.FPLDataDownloader.HttpRequests.Requesters
         
 
         public async Task<bool> ExecuteRequest()
-        {
+        {           
             bool success = false;
-            var stringContent = new FormUrlEncodedContent(new[]
-            {
-                new KeyValuePair<string, string>("password", "xxx"),//temp, dont wanna push my real pass
-                new KeyValuePair<string, string>("login", "xxx@gmail.com"),
-                new KeyValuePair<string, string>("redirect_uri", "https://fantasy.premierleague.com/a/login"),
-                new KeyValuePair<string, string>("app", "plfpl-web"),
-            });
+            //var stringContent = new FormUrlEncodedContent(new[]
+            //{
+            //    new KeyValuePair<string, string>("password", "xxx"),//temp, dont wanna push my real pass
+            //    new KeyValuePair<string, string>("login", "xxx@gmail.com"),
+            //    new KeyValuePair<string, string>("redirect_uri", "https://fantasy.premierleague.com/a/login"),
+            //    new KeyValuePair<string, string>("app", "plfpl-web"),
+            //});
 
-            HttpResponseMessage response = await HttpClient.PostAsync("https://users.premierleague.com/accounts/login/", stringContent);
+            HttpResponseMessage response = await HttpClient.PostAsync("https://users.premierleague.com/accounts/login/", _Content);
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 success = true;
@@ -43,9 +43,9 @@ namespace TopkaE.FPLDataDownloader.HttpRequests.Requesters
             //responseBody = await result.Content.ReadAsStringAsync();
         }
 
-        private void SetUpAuthParams(string pass, string login)
+        private void SetUpAuthParams(string login, string pass)
         {
-            content = new FormUrlEncodedContent(new[]
+            _Content = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("password", pass),//temp, dont wanna push my real pass
                 new KeyValuePair<string, string>("login", login),
