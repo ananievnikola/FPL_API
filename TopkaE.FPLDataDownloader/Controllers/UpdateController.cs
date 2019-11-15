@@ -27,7 +27,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
         {
             _playerRequester = new GeneralDataRequester();
             _leagueRequester = new LeagueRequester();
-            _authRequester = new AuthenticationRequester("ba37faf3", "ananievnikola@gmail.com");
+            _authRequester = new AuthenticationRequester("xxx", "xxx@gmail.com");
             _context = context;
         }
 
