@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using TopkaE.FPLDataDownloader.DBContext;
 using TopkaE.FPLDataDownloader.HttpRequests.Requesters;
+using NewImp = TopkaE.FPLDataDownloader.HttpRequests.Requesters.NewImp;
 using TopkaE.FPLDataDownloader.HttpRequests.Utilities;
 using TopkaE.FPLDataDownloader.Models.InputModels;
 using TopkaE.FPLDataDownloader.Models.InputModels.LeagueDataModel;
@@ -32,6 +33,16 @@ namespace TopkaE.FPLDataDownloader.Controllers
         }
 
         [HttpGet]
+        [Route("UpdateAllNew")]
+        public async Task<bool> UpdateAllNew()//pass array of leagueIds here
+        {
+            NewImp.RequesterFactory requester = new NewImp.BasicRequesterFactory();
+            NewImp.Requester gdr = requester.CreaterRequester(NewImp.EBasicRequestType.GeneralDataRequester);
+            string res = await gdr.ExecuteRequest();
+            return false;
+        }
+
+        [HttpGet]
         [Route("")]
         [Route("UpdateAll")]
         public async Task<bool> UpdateAll()//pass array of leagueIds here
@@ -46,6 +57,63 @@ namespace TopkaE.FPLDataDownloader.Controllers
             //aggregateResults.Add("players", playersResult);
             bool leagueResult = await UpdateLeagues(leagueId, page);
             result = !aggregateResults.ContainsValue(false);
+            return result;
+        }
+
+        private async Task<bool> UpdatePlayersNew()
+        {
+            bool result = true;
+            string resp = await _playerRequester.ExecuteRequest();
+            if (!string.IsNullOrEmpty(resp))
+            {
+                GeneralDataModel gdm = JsonConvert.DeserializeObject<GeneralDataModel>(resp);
+                if (gdm == null || gdm.Players == null)
+                {
+                    //log ex
+                    result = false;
+                }
+                else
+                {
+                    List<Element> players = gdm.Players;
+                    if (players != null && players.Count > 0) //
+                    {
+                        List<Element> playersFromDB = await _context.Elements.AsNoTracking().ToListAsync();
+                        if (playersFromDB == null)
+                        {
+                            DateTime time = DateTime.Now;
+                            foreach (var player in players)
+                            {
+                                player.LastUpdated = time;
+                            }
+                            _context.Elements.AddRange(players);
+                            result = true;
+                        }
+                        else if (playersFromDB != null)
+                        {
+                            foreach (var player in players)
+                            {
+                                player.LastUpdated = DateTime.Now;
+                                Element currentDbPlayer = playersFromDB.FirstOrDefault(p => p.Id == player.Id);
+                                if (currentDbPlayer != null)
+                                {
+                                    _context.Update(player);
+                                }
+                                else
+                                {
+                                    _context.Add(player);
+                                }
+                                result = true;
+                            }
+                        }
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        result = false;
+                        //add log
+                    }
+                }
+            }
             return result;
         }
 
