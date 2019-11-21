@@ -30,6 +30,7 @@ namespace TopkaE.FPLDataDownloader
         {
             services.AddDbContext<TopkaEContext>(options => options.UseSqlite("Data Source=" + Environment.CurrentDirectory + "\\Database\\fpldata.db"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddHttpClient();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

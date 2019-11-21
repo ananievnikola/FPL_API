@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TopkaE.FPLDataDownloader.HttpRequests.Requesters.NewImp
+namespace TopkaE.FPLDataDownloader.HttpRequests.Requesters
 {
     public enum EBasicRequestType
     {

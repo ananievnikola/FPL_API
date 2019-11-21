@@ -10,8 +10,6 @@ namespace TopkaE.FPLDataDownloader.DBContext
             : base(options)
         {
         }
-
-        //public DbSet<GeneralDataModel> GeneralData { get; set; }
         public DbSet<Element> Elements { get; set; }
         public DbSet<GeneralLeagueModel> Leagues { get; set; }
 

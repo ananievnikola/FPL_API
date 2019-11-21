@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -24,10 +25,8 @@ namespace TopkaE.FPLDataDownloader.Controllers
         private readonly OutputCamelCaseSerializer _serializer;
         private readonly CSVConverter _csvConv;
 
-
-        public PlayersController(TopkaEContext context)
+        public PlayersController(TopkaEContext context, IHttpClientFactory clientFactory)
         {
-            //_requester = new GeneralDataRequester();
             _serializer = new OutputCamelCaseSerializer();
             _context = context;
             _csvConv = new CSVConverter();
