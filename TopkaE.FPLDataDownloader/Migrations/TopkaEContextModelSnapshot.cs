@@ -105,6 +105,8 @@ namespace TopkaE.FPLDataDownloader.Migrations
 
                     b.Property<int>("TeamCode");
 
+                    b.Property<string>("TeamName");
+
                     b.Property<string>("Threat");
 
                     b.Property<int>("TotalPoints");

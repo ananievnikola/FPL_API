@@ -14,6 +14,7 @@ using TopkaE.FPLDataDownloader.Models.InputModels;
 using TopkaE.FPLDataDownloader.Models.InputModels.LeagueDataModel;
 using System.Net.Http;
 using TopkaE.FPLDataDownloader.HttpRequests;
+using TopkaE.FPLDataDownloader.Utilities;
 
 namespace TopkaE.FPLDataDownloader.Controllers
 {
@@ -75,6 +76,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
                             foreach (var player in players)
                             {
                                 player.LastUpdated = time;
+                                player.TeamName = PlayersUtilities.GetTeamName(player.TeamCode);
                             }
                             _context.Elements.AddRange(players);
                             result = true;
@@ -84,6 +86,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
                             foreach (var player in players)
                             {
                                 player.LastUpdated = DateTime.Now;
+                                player.TeamName = PlayersUtilities.GetTeamName(player.TeamCode);
                                 Element currentDbPlayer = playersFromDB.FirstOrDefault(p => p.Id == player.Id);
                                 if (currentDbPlayer != null)
                                 {

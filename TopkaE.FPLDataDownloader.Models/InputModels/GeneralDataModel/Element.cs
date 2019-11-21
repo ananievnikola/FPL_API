@@ -110,7 +110,10 @@ namespace TopkaE.FPLDataDownloader.Models.InputModels
         public string Threat { get; set; }
         [JsonProperty(PropertyName = "ict_index")]
         public string IctIndex { get; set; }
+        //Additional properties
         public DateTime? LastUpdated { get; set; }
+        public string TeamName { get; set; }
+
 
         //public double PointsPerPrice { get; set; }
         //public double MinutesPerPoint { get; set; }

@@ -2,5 +2,8 @@
 	## Without parameters
 	- https://localhost:5001/api/players - returns all players
 	## points parameter
-	- https://localhost:5001/api/players?points=50 - returns all players with more than 50 points
-	- 
+	- https://localhost:5001/api/players?points=50 - returns all players with more than or equal to 50 points
+	- https://localhost:5001/api/players?team=Arsenal - return all arsenal players
+		### team parameter valid values
+			- Arsenal
+			
