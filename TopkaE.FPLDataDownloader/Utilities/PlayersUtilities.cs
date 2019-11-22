@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using TopkaE.FPLDataDownloader.Models.InputModels;
-
-namespace TopkaE.FPLDataDownloader.Utilities
+﻿namespace TopkaE.FPLDataDownloader.Utilities
 {
     public static class PlayersUtilities
     {
@@ -18,7 +12,7 @@ namespace TopkaE.FPLDataDownloader.Utilities
                     teamName = "Arsenal";
                     break;
                 case 7:
-                    teamName = "Aston Vila";
+                    teamName = "Aston Villa";
                     break;
                 case 91:
                     teamName = "Bournemouth";

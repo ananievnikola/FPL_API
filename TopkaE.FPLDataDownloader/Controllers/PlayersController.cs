@@ -38,6 +38,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
         [Route("Get")]
         public async Task<ActionResult<IEnumerable<Element>>> GetPlayers(int? points, string team)
         {
+            //TODO: Optimize the ToList() calls
             List<Element> players = await _context.Elements.ToListAsync();
             if (points != null)
             {
@@ -45,7 +46,8 @@ namespace TopkaE.FPLDataDownloader.Controllers
             }
             if (!string.IsNullOrEmpty(team))
             {
-                //players = players.Where(p => p.Team);
+                team = team.Replace("_", " ");
+                players = players.Where(p => p.TeamName.Equals(team, StringComparison.InvariantCultureIgnoreCase)).ToList();
             }
             //List<Element> players = await _context.Elements.ToListAsync();
             return _serializer.Serialize(players, this);
@@ -62,14 +64,14 @@ namespace TopkaE.FPLDataDownloader.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Element>> GetElement(int id)
         {
-            var element = await _context.Elements.FindAsync(id);
+            var player = await _context.Elements.FindAsync(id);
 
-            if (element == null)
+            if (player == null)
             {
                 return NotFound();
             }
 
-            return element;
+            return _serializer.Serialize(player, this); //player;
         }
 
         private bool ElementExists(int id)

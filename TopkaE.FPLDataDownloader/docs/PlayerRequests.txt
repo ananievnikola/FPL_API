@@ -1,9 +1,36 @@
-﻿# Get players
-	## Without parameters
+﻿## Fill the Database 
+	Usually this is the first thing you want to do. The application downloads the players data and saves it on a local DB (nothing to install here, don't worry, local db)
+	- https://localhost:5001/api/update
+	After this step you have all the data locally so it is much faster to use it in any way.
+
+## Get players
+	### Without parameters
 	- https://localhost:5001/api/players - returns all players
-	## points parameter
+	### points parameter
 	- https://localhost:5001/api/players?points=50 - returns all players with more than or equal to 50 points
+	### Team parameter
 	- https://localhost:5001/api/players?team=Arsenal - return all arsenal players
-		### team parameter valid values
+		#### team parameter valid values (white space is replaced with _ in the API calls)
 			- Arsenal
-			
+			- Aston_Villa
+			- Bournemouth
+			- Brighton
+			- Burnley
+			- Chelsea
+			- Crystal_Palace
+			- Everton
+			- Leicester
+			- Liverpool
+			- Manchester_City
+			- Manchester_United
+			- Newcastle
+			- Norwich
+			- Sheffield_United
+			- Southampton
+			- Tottenham
+			- Watford
+			- West_Ham
+			- Wolverhampton
+
+		### Combining parameters
+		https://localhost:5001/api/players?points=50&team=Arsenal
