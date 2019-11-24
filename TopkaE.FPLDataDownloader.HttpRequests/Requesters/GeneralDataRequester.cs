@@ -10,7 +10,7 @@ namespace TopkaE.FPLDataDownloader.HttpRequests.Requesters
         internal GeneralDataRequester(HttpClient client) : base(client)
         {
         }
-        public override async Task<string> ExecuteRequest()
+        public async Task<string> ExecuteRequest()
         {
             string responseBody = null;
             try
