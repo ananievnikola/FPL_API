@@ -11,3 +11,5 @@
 - Rewrite requesters so the singleton is actually "singleton per user"
 
 --- parallelism in updater
+
+- Paging of the results

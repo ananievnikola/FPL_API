@@ -4,15 +4,11 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 using TopkaE.FPLDataDownloader.DBContext;
-using TopkaE.FPLDataDownloader.HttpRequests.Requesters;
 using TopkaE.FPLDataDownloader.Models.InputModels;
+using TopkaE.FPLDataDownloader.Models.OutputModels;
 using TopkaE.FPLDataDownloader.Utilities;
 
 namespace TopkaE.FPLDataDownloader.Controllers
@@ -72,6 +68,38 @@ namespace TopkaE.FPLDataDownloader.Controllers
             }
 
             return _serializer.Serialize(player, this); //player;
+        }
+
+        [HttpGet]
+        [Route("MostTransferedIn")]
+        public async Task<ActionResult<IEnumerable<EventTransfers>>> GetMostTransferedIn(int? top)
+        {
+            List<Element> players = await _context.Elements.ToListAsync();            
+            if (top != null || top != 0)
+            {
+                players = players.OrderByDescending(p => p.TransfersInEvent).Take(top.GetValueOrDefault()).ToList();
+            }
+            else
+            {
+                players = players.OrderByDescending(p => p.TransfersInEvent).ToList();
+            }
+            return _serializer.Serialize(players, this);
+        }
+
+        [HttpGet]
+        [Route("MostTransferedOut")]
+        public async Task<ActionResult<IEnumerable<Element>>> GetMostTransferedOut(int? top)
+        {
+            List<Element> players = await _context.Elements.ToListAsync();
+            if (top != null || top != 0)
+            {
+                players = players.OrderBy(p => p.TransfersOutEvent).Take(top.GetValueOrDefault()).ToList();
+            }
+            else
+            {
+                players = players.OrderBy(p => p.TransfersOutEvent).ToList();
+            }
+            return _serializer.Serialize(players, this);
         }
 
         private bool ElementExists(int id)

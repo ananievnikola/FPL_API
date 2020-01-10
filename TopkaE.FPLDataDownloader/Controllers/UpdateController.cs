@@ -2,18 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using TopkaE.FPLDataDownloader.DBContext;
 using TopkaE.FPLDataDownloader.HttpRequests.Requesters;
-//using NewImp = TopkaE.FPLDataDownloader.HttpRequests.Requesters.NewImp;
-using TopkaE.FPLDataDownloader.HttpRequests.Utilities;
 using TopkaE.FPLDataDownloader.Models.InputModels;
-using TopkaE.FPLDataDownloader.Models.InputModels.LeagueDataModel;
 using System.Net.Http;
-using TopkaE.FPLDataDownloader.HttpRequests;
 using TopkaE.FPLDataDownloader.Utilities;
 
 namespace TopkaE.FPLDataDownloader.Controllers
@@ -23,8 +18,6 @@ namespace TopkaE.FPLDataDownloader.Controllers
     public class UpdateController : ControllerBase
     {
         private readonly IRequester _playerRequester;
-        //private readonly LeagueRequester _leagueRequester;
-        //private readonly AuthenticationRequester _authRequester;
         private readonly TopkaEContext _context;
         private HttpClient _client;
         private readonly RequesterFactory _requesterFactory;
@@ -34,8 +27,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
             _client = clientFactory.CreateClient();
             _requesterFactory = new RequesterFactory();
             _playerRequester = _requesterFactory.CreaterRequester(EBasicRequestType.GeneralDataRequester, _client);
-            _context = context;
-            
+            _context = context;           
         }
 
         [HttpGet]
