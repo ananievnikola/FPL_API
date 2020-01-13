@@ -13,6 +13,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using TopkaE.FPLDataDownloader.DBContext;
 using Newtonsoft.Json.Serialization;
+using AutoMapper;
+using TopkaE.FPLDataDownloader.AutoMapper;
 
 namespace TopkaE.FPLDataDownloader
 {
@@ -30,6 +32,13 @@ namespace TopkaE.FPLDataDownloader
         {
             services.AddDbContext<TopkaEContext>(options => options.UseSqlite("Data Source=" + Environment.CurrentDirectory + "\\Database\\fpldata.db"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new OutputModelsProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
             services.AddHttpClient();
         }
 

@@ -7,7 +7,5 @@ namespace TopkaE.FPLDataDownloader.Models.OutputModels
 {
     public interface IOutputModel
     {
-        void Map(IFPLModel inputModel);
-        //List<IOutputModel> MapList(List<IFPLModel> inputModel);
     }
 }

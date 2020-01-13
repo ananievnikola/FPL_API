@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TopkaE.FPLDataDownloader.DBContext;
@@ -20,12 +21,14 @@ namespace TopkaE.FPLDataDownloader.Controllers
         private readonly TopkaEContext _context;       
         private readonly OutputCamelCaseSerializer _serializer;
         private readonly CSVConverter _csvConv;
+        private readonly IMapper _mapper;
 
-        public PlayersController(TopkaEContext context, IHttpClientFactory clientFactory)
+        public PlayersController(TopkaEContext context, IHttpClientFactory clientFactory, IMapper mapper)
         {
             _serializer = new OutputCamelCaseSerializer();
             _context = context;
             _csvConv = new CSVConverter();
+            _mapper = mapper;
         }
 
         // GET: api/Players
@@ -84,7 +87,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
             {
                 players = players.OrderByDescending(p => p.TransfersInEvent).ToList();
             }
-            List<EventTransfers> results = EventTransfers.MapList(players);
+            List<EventTransfers> results = _mapper.Map<List<EventTransfers>>(players);//EventTransfers.MapList(players);
             return _serializer.Serialize(results, this);
         }
 
@@ -101,7 +104,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
             {
                 players = players.OrderByDescending(p => p.TransfersOutEvent).ToList();
             }
-            List<EventTransfers> results = EventTransfers.MapList(players);
+            List<EventTransfers> results = _mapper.Map<List<EventTransfers>>(players);//EventTransfers.MapList(players);
             return _serializer.Serialize(results, this);
         }
 
@@ -118,7 +121,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
             {
                 players = players.OrderByDescending(p => p.GoalsScored).ToList();
             }
-            List<MostGoals> results = MostGoals.MapList(players);
+            List<MostGoals> results = _mapper.Map<List<MostGoals>>(players);//MostGoals.MapList(players);
             return _serializer.Serialize(results, this);
         }
 
