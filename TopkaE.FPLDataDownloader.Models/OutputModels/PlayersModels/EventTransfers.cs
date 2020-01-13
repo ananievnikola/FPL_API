@@ -5,16 +5,12 @@ using TopkaE.FPLDataDownloader.Models.InputModels;
 
 namespace TopkaE.FPLDataDownloader.Models.OutputModels
 {
-    public class EventTransfers : IOutputModel
+    public class EventTransfers : PlayerModelBase, IOutputModel
     {
         public EventTransfers(Element inputModel)
         {
             this.Map(inputModel);
         }
-
-        public string FirstName { get; set; }
-        public string TeamName { get; set; }
-        public string SecondName { get; set; }
         public int TransfersInEvent { get; set; }
         public int TransfersOutEvent { get; set; }
 
@@ -26,6 +22,16 @@ namespace TopkaE.FPLDataDownloader.Models.OutputModels
             this.TeamName = inputModelAsElement.TeamName;
             this.TransfersInEvent = inputModelAsElement.TransfersInEvent;
             this.TransfersOutEvent = inputModelAsElement.TransfersOutEvent;
+        }
+
+        public static List<EventTransfers> MapList(List<Element> players)
+        {
+            List<EventTransfers> result = new List<EventTransfers>();
+            foreach (var player in players)
+            {
+                result.Add(new EventTransfers(player));
+            }
+            return result;
         }
     }
 }

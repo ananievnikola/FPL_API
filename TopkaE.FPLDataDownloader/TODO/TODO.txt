@@ -13,3 +13,5 @@
 --- parallelism in updater
 
 - Paging of the results
+
+- AutoMapper to replace manual mapping

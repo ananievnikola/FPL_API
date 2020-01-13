@@ -74,7 +74,8 @@ namespace TopkaE.FPLDataDownloader.Controllers
         [Route("MostTransferedIn")]
         public async Task<ActionResult<IEnumerable<EventTransfers>>> GetMostTransferedIn(int? top)
         {
-            List<Element> players = await _context.Elements.ToListAsync();            
+            List<Element> players = await _context.Elements.ToListAsync();
+            
             if (top != null || top != 0)
             {
                 players = players.OrderByDescending(p => p.TransfersInEvent).Take(top.GetValueOrDefault()).ToList();
@@ -83,7 +84,8 @@ namespace TopkaE.FPLDataDownloader.Controllers
             {
                 players = players.OrderByDescending(p => p.TransfersInEvent).ToList();
             }
-            return _serializer.Serialize(players, this);
+            List<EventTransfers> results = EventTransfers.MapList(players);
+            return _serializer.Serialize(results, this);
         }
 
         [HttpGet]
@@ -93,13 +95,14 @@ namespace TopkaE.FPLDataDownloader.Controllers
             List<Element> players = await _context.Elements.ToListAsync();
             if (top != null || top != 0)
             {
-                players = players.OrderBy(p => p.TransfersOutEvent).Take(top.GetValueOrDefault()).ToList();
+                players = players.OrderByDescending(p => p.TransfersOutEvent).Take(top.GetValueOrDefault()).ToList();
             }
             else
             {
-                players = players.OrderBy(p => p.TransfersOutEvent).ToList();
+                players = players.OrderByDescending(p => p.TransfersOutEvent).ToList();
             }
-            return _serializer.Serialize(players, this);
+            List<EventTransfers> results = EventTransfers.MapList(players);
+            return _serializer.Serialize(results, this);
         }
 
         [HttpGet]
@@ -115,7 +118,8 @@ namespace TopkaE.FPLDataDownloader.Controllers
             {
                 players = players.OrderByDescending(p => p.GoalsScored).ToList();
             }
-            return _serializer.Serialize(players, this);
+            List<MostGoals> results = MostGoals.MapList(players);
+            return _serializer.Serialize(results, this);
         }
 
         [HttpGet]
