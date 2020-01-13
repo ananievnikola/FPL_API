@@ -48,7 +48,6 @@ namespace TopkaE.FPLDataDownloader.Controllers
                 team = team.Replace("_", " ");
                 players = players.Where(p => p.TeamName.Equals(team, StringComparison.InvariantCultureIgnoreCase)).ToList();
             }
-            //List<Element> players = await _context.Elements.ToListAsync();
             return _serializer.Serialize(players, this);
         }
 
