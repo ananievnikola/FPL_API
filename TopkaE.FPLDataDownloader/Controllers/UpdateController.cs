@@ -18,6 +18,9 @@ namespace TopkaE.FPLDataDownloader.Controllers
     public class UpdateController : ControllerBase
     {
         private readonly IRequester _playerRequester;
+        private readonly IRequester _playerSummaryRequester;
+        //private readonly LeagueRequester _leagueRequester;
+        //private readonly AuthenticationRequester _authRequester;
         private readonly TopkaEContext _context;
         private HttpClient _client;
         private readonly RequesterFactory _requesterFactory;
@@ -27,13 +30,15 @@ namespace TopkaE.FPLDataDownloader.Controllers
             _client = clientFactory.CreateClient();
             _requesterFactory = new RequesterFactory();
             _playerRequester = _requesterFactory.CreaterRequester(EBasicRequestType.GeneralDataRequester, _client);
-            _context = context;           
+            _playerSummaryRequester = _requesterFactory.CreaterRequester(EBasicRequestType.PlayerSummaryRequester, _client);
+            _context = context;
+            
         }
 
         [HttpGet]
         [Route("")]
         [Route("UpdateAll")]
-        public async Task<bool> UpdateAllNew()
+        public async Task<bool> UpdateAll()
         {
             bool result = false;
 
@@ -69,8 +74,10 @@ namespace TopkaE.FPLDataDownloader.Controllers
                             {
                                 player.LastUpdated = time;
                                 player.TeamName = PlayersUtilities.GetTeamName(player.TeamCode);
+                                var playersSummary = await this.UpdatePlayerSummary(player.Id);
                             }
                             _context.Elements.AddRange(players);
+                            
                             result = true;
                         }
                         else if (playersFromDB != null)
@@ -88,6 +95,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
                                 {
                                     _context.Add(player);
                                 }
+                                var playersSummary = await this.UpdatePlayerSummary(player.Id);
                                 result = true;
                             }
                         }
@@ -100,6 +108,36 @@ namespace TopkaE.FPLDataDownloader.Controllers
                     }
                 }
             }
+            return result;
+        }
+
+        private async Task<bool> UpdatePlayerSummary(int id)
+        {
+            bool result = false;
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("id", id);
+            ((IParameterizedRequester)_playerSummaryRequester).SetUpParams(parameters);
+            string resp = await _playerSummaryRequester.ExecuteRequest();
+            if (!string.IsNullOrEmpty(resp))
+            {
+                PlayerSummaryDataModel playerSummary = JsonConvert.DeserializeObject<PlayerSummaryDataModel>(resp);
+                playerSummary.Id = id;
+                PlayerSummaryDataModel playerSummaryFromDb = _context.PlayersSummary.Find(playerSummary.Id);//.AsNoTracking().ToListAsync()
+                if (playerSummaryFromDb == null)
+                {
+                    _context.Add(playerSummary);
+                }
+                else
+                {
+                    _context.Update(playerSummary);
+                }
+                
+            }
+            else
+            {
+                result = false;
+            }
+            
             return result;
         }
 

@@ -11,7 +11,7 @@ namespace TopkaE.FPLDataDownloader.DBContext
         {
         }
         public DbSet<Element> Elements { get; set; }
-        public DbSet<GeneralLeagueModel> Leagues { get; set; }
+        public DbSet<PlayerSummaryDataModel> PlayersSummary { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

@@ -132,110 +132,144 @@ namespace TopkaE.FPLDataDownloader.Migrations
                     b.ToTable("Elements");
                 });
 
-            modelBuilder.Entity("TopkaE.FPLDataDownloader.Models.InputModels.LeagueDataModel.GeneralLeagueModel", b =>
+            modelBuilder.Entity("TopkaE.FPLDataDownloader.Models.InputModels.Fixture", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("leagueid");
+                    b.Property<int>("Code");
 
-                    b.Property<int?>("standingsId");
+                    b.Property<int>("Difficulty");
+
+                    b.Property<int?>("Event");
+
+                    b.Property<string>("EventName");
+
+                    b.Property<bool>("Finished");
+
+                    b.Property<bool>("IsHome");
+
+                    b.Property<DateTime?>("KickoffTime");
+
+                    b.Property<int>("Minutes");
+
+                    b.Property<int?>("PlayerSummaryDataModelId");
+
+                    b.Property<bool>("ProvisionalStartTime");
+
+                    b.Property<int>("TeamA");
+
+                    b.Property<int?>("TeamAScore");
+
+                    b.Property<int>("TeamH");
+
+                    b.Property<int?>("TeamHScore");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("leagueid");
+                    b.HasIndex("PlayerSummaryDataModelId");
 
-                    b.HasIndex("standingsId");
-
-                    b.ToTable("Leagues");
+                    b.ToTable("Fixture");
                 });
 
-            modelBuilder.Entity("TopkaE.FPLDataDownloader.Models.InputModels.LeagueDataModel.League", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("admin_entry");
-
-                    b.Property<bool>("closed");
-
-                    b.Property<string>("code_privacy");
-
-                    b.Property<DateTime>("created");
-
-                    b.Property<string>("league_type");
-
-                    b.Property<string>("name");
-
-                    b.Property<string>("scoring");
-
-                    b.Property<int>("start_event");
-
-                    b.HasKey("id");
-
-                    b.ToTable("League");
-                });
-
-            modelBuilder.Entity("TopkaE.FPLDataDownloader.Models.InputModels.LeagueDataModel.Result2", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("StandingsId");
-
-                    b.Property<int>("entry");
-
-                    b.Property<string>("entry_name");
-
-                    b.Property<int>("event_total");
-
-                    b.Property<int>("last_rank");
-
-                    b.Property<string>("player_name");
-
-                    b.Property<int>("rank");
-
-                    b.Property<int>("rank_sort");
-
-                    b.Property<int>("total");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("StandingsId");
-
-                    b.ToTable("Result2");
-                });
-
-            modelBuilder.Entity("TopkaE.FPLDataDownloader.Models.InputModels.LeagueDataModel.Standings", b =>
+            modelBuilder.Entity("TopkaE.FPLDataDownloader.Models.InputModels.History", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<bool>("has_next");
+                    b.Property<int>("Assists");
 
-                    b.Property<int>("page");
+                    b.Property<int>("BPS");
+
+                    b.Property<int>("Bonus");
+
+                    b.Property<int>("CleanSheets");
+
+                    b.Property<string>("Creativity");
+
+                    b.Property<int>("Element");
+
+                    b.Property<int>("Fixture");
+
+                    b.Property<int>("GoalsConceded");
+
+                    b.Property<int>("GoalsScored");
+
+                    b.Property<string>("ICTndex");
+
+                    b.Property<string>("Influence");
+
+                    b.Property<DateTime?>("KickoffTime");
+
+                    b.Property<int>("Minutes");
+
+                    b.Property<int>("OpponentTeam");
+
+                    b.Property<int>("OwnGoals");
+
+                    b.Property<int>("PenaltiesMissed");
+
+                    b.Property<int>("PenaltiesSaved");
+
+                    b.Property<int?>("PlayerSummaryDataModelId");
+
+                    b.Property<int>("RedCards");
+
+                    b.Property<int>("Round");
+
+                    b.Property<int>("Saves");
+
+                    b.Property<int>("Selected");
+
+                    b.Property<int?>("TeamAScore");
+
+                    b.Property<int?>("TeamHScore");
+
+                    b.Property<string>("Threat");
+
+                    b.Property<int>("TotalPoints");
+
+                    b.Property<int>("TransfersBalance");
+
+                    b.Property<int>("TransfersIn");
+
+                    b.Property<int>("TransfersOut");
+
+                    b.Property<int>("Value");
+
+                    b.Property<bool>("WasHome");
+
+                    b.Property<int>("YellowCards");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Standings");
+                    b.HasIndex("PlayerSummaryDataModelId");
+
+                    b.ToTable("History");
                 });
 
-            modelBuilder.Entity("TopkaE.FPLDataDownloader.Models.InputModels.LeagueDataModel.GeneralLeagueModel", b =>
+            modelBuilder.Entity("TopkaE.FPLDataDownloader.Models.InputModels.PlayerSummaryDataModel", b =>
                 {
-                    b.HasOne("TopkaE.FPLDataDownloader.Models.InputModels.LeagueDataModel.League", "league")
-                        .WithMany()
-                        .HasForeignKey("leagueid");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
-                    b.HasOne("TopkaE.FPLDataDownloader.Models.InputModels.LeagueDataModel.Standings", "standings")
-                        .WithMany()
-                        .HasForeignKey("standingsId");
+                    b.HasKey("Id");
+
+                    b.ToTable("PlayersSummary");
                 });
 
-            modelBuilder.Entity("TopkaE.FPLDataDownloader.Models.InputModels.LeagueDataModel.Result2", b =>
+            modelBuilder.Entity("TopkaE.FPLDataDownloader.Models.InputModels.Fixture", b =>
                 {
-                    b.HasOne("TopkaE.FPLDataDownloader.Models.InputModels.LeagueDataModel.Standings")
-                        .WithMany("results")
-                        .HasForeignKey("StandingsId");
+                    b.HasOne("TopkaE.FPLDataDownloader.Models.InputModels.PlayerSummaryDataModel")
+                        .WithMany("Fixtures")
+                        .HasForeignKey("PlayerSummaryDataModelId");
+                });
+
+            modelBuilder.Entity("TopkaE.FPLDataDownloader.Models.InputModels.History", b =>
+                {
+                    b.HasOne("TopkaE.FPLDataDownloader.Models.InputModels.PlayerSummaryDataModel")
+                        .WithMany("History")
+                        .HasForeignKey("PlayerSummaryDataModelId");
                 });
 #pragma warning restore 612, 618
         }

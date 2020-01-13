@@ -4,17 +4,12 @@ using System.Threading.Tasks;
 
 namespace TopkaE.FPLDataDownloader.HttpRequests.Requesters
 {
-    public abstract class RequesterBase : IRequester
+    public abstract class RequesterBase //: IParamlessRequester
     {
         protected virtual HttpClient _client { get; set; }
         internal RequesterBase(HttpClient client)
         {
             _client = client;
-        }
-
-        public virtual Task<string> ExecuteRequest()
-        {
-            throw new NotImplementedException();
         }
     }
 }

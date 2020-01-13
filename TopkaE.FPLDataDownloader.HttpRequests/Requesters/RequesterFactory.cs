@@ -10,6 +10,8 @@ namespace TopkaE.FPLDataDownloader.HttpRequests.Requesters
             {
                 case EBasicRequestType.GeneralDataRequester:
                     return new GeneralDataRequester(client);
+                case EBasicRequestType.PlayerSummaryRequester:
+                    return new PlayerSummaryRequester(client);
                 default:
                     break;
             }
