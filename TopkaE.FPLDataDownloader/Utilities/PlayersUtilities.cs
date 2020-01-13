@@ -74,5 +74,32 @@
             return teamName;
 
         }
+
+        public static string[] GetAllTeamNames ()
+        {
+            return new string[]
+            {
+                "Arsenal",
+                "Aston Villa",
+                "Bournemouth",
+                "Brighton",
+                "Burnley",
+                "Chelsea",
+                "Crystal Palace",
+                "Everton",
+                "Leicester",
+                "Liverpool",
+                "Manchester City",
+                "Manchester United",
+                "Newcastle",
+                "Norwich",
+                "Sheffield United",
+                "Southampton",
+                "Tottenham",
+                "Watford",
+                "West Ham",
+                "Wolverhampton"
+            };
+        }
     }
 }

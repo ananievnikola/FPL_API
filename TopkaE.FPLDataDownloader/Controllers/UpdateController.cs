@@ -74,7 +74,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
                             {
                                 player.LastUpdated = time;
                                 player.TeamName = PlayersUtilities.GetTeamName(player.TeamCode);
-                                var playersSummary = await this.UpdatePlayerSummary(player.Id);
+                                //var playersSummary = await this.UpdatePlayerSummary(player.Id);
                             }
                             _context.Elements.AddRange(players);
                             
@@ -95,7 +95,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
                                 {
                                     _context.Add(player);
                                 }
-                                var playersSummary = await this.UpdatePlayerSummary(player.Id);
+                                //var playersSummary = await this.UpdatePlayerSummary(player.Id);
                                 result = true;
                             }
                         }
@@ -111,35 +111,35 @@ namespace TopkaE.FPLDataDownloader.Controllers
             return result;
         }
 
-        private async Task<bool> UpdatePlayerSummary(int id)
-        {
-            bool result = false;
-            Dictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("id", id);
-            ((IParameterizedRequester)_playerSummaryRequester).SetUpParams(parameters);
-            string resp = await _playerSummaryRequester.ExecuteRequest();
-            if (!string.IsNullOrEmpty(resp))
-            {
-                PlayerSummaryDataModel playerSummary = JsonConvert.DeserializeObject<PlayerSummaryDataModel>(resp);
-                playerSummary.Id = id;
-                PlayerSummaryDataModel playerSummaryFromDb = _context.PlayersSummary.Find(playerSummary.Id);//.AsNoTracking().ToListAsync()
-                if (playerSummaryFromDb == null)
-                {
-                    _context.Add(playerSummary);
-                }
-                else
-                {
-                    _context.Update(playerSummary);
-                }
+        //private async Task<bool> UpdatePlayerSummary(int id)
+        //{
+        //    bool result = false;
+        //    Dictionary<string, object> parameters = new Dictionary<string, object>();
+        //    parameters.Add("id", id);
+        //    ((IParameterizedRequester)_playerSummaryRequester).SetUpParams(parameters);
+        //    string resp = await _playerSummaryRequester.ExecuteRequest();
+        //    if (!string.IsNullOrEmpty(resp))
+        //    {
+        //        PlayerSummaryDataModel playerSummary = JsonConvert.DeserializeObject<PlayerSummaryDataModel>(resp);
+        //        playerSummary.Id = id;
+        //        PlayerSummaryDataModel playerSummaryFromDb = _context.PlayersSummary.Find(playerSummary.Id);//.AsNoTracking().ToListAsync()
+        //        if (playerSummaryFromDb == null)
+        //        {
+        //            _context.Add(playerSummary);
+        //        }
+        //        else
+        //        {
+        //            _context.Update(playerSummary);
+        //        }
                 
-            }
-            else
-            {
-                result = false;
-            }
+        //    }
+        //    else
+        //    {
+        //        result = false;
+        //    }
             
-            return result;
-        }
+        //    return result;
+        //}
 
         //[HttpGet]
         //[Route("")]

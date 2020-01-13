@@ -102,6 +102,54 @@ namespace TopkaE.FPLDataDownloader.Controllers
             return _serializer.Serialize(players, this);
         }
 
+        [HttpGet]
+        [Route("MostGoals")]
+        public async Task<ActionResult<IEnumerable<Element>>> GetMostGoals(int? top)
+        {
+            List<Element> players = await _context.Elements.ToListAsync();
+            if (top != null && top != 0)
+            {
+                players = players.OrderByDescending(p => p.GoalsScored).Take(top.GetValueOrDefault()).ToList();
+            }
+            else
+            {
+                players = players.OrderByDescending(p => p.GoalsScored).ToList();
+            }
+            return _serializer.Serialize(players, this);
+        }
+
+        [HttpGet]
+        [Route("MostGoalsForTeam")]
+        public async Task<ActionResult<IEnumerable<Element>>> GetMostGoalsForTeam()
+        {
+            List<Element> players = await _context.Elements.ToListAsync();
+            List<Element> result = new List<Element>();
+            string[] allTeamNames = PlayersUtilities.GetAllTeamNames();
+            foreach (var teamName in allTeamNames)
+            {
+                var allTeamPlayers = players.Where(p => p.TeamName == teamName);
+                var maxScoredGoals = allTeamPlayers.Max(p => p.GoalsScored);
+                result.AddRange(allTeamPlayers.Where(p => p.GoalsScored == maxScoredGoals));
+            }
+            return _serializer.Serialize(result, this);
+        }
+
+        [HttpGet]
+        [Route("MostGoalsInvolvement")]
+        public async Task<ActionResult<IEnumerable<Element>>> GetMostGoalsInvolvement()
+        {
+            List<Element> players = await _context.Elements.ToListAsync();
+            List<Element> result = new List<Element>();
+            string[] allTeamNames = PlayersUtilities.GetAllTeamNames();
+            foreach (var teamName in allTeamNames)
+            {
+                var allTeamPlayers = players.Where(p => p.TeamName == teamName);
+                var maxGoalsAssists = allTeamPlayers.Max(p => p.GoalsScored + p.Assists);
+                result.AddRange(allTeamPlayers.Where(p => p.GoalsScored + p.Assists == maxGoalsAssists));
+            }
+            return _serializer.Serialize(result, this);
+        }
+
         private bool ElementExists(int id)
         {
             return _context.Elements.Any(e => e.Id == id);
