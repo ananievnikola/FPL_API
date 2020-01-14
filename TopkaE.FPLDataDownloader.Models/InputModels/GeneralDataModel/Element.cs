@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace TopkaE.FPLDataDownloader.Models.InputModels
 {
@@ -113,6 +114,10 @@ namespace TopkaE.FPLDataDownloader.Models.InputModels
         //Additional properties
         public DateTime? LastUpdated { get; set; }
         public string TeamName { get; set; }
+
+        //Navigation properties
+        public List<Fixture> Fixtures { get; set; }
+        public List<History> Histories { get; set; }
 
 
         //public double PointsPerPrice { get; set; }

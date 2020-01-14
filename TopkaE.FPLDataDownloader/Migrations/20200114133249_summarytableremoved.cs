@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TopkaE.FPLDataDownloader.Migrations
 {
-    public partial class reinit : Migration
+    public partial class summarytableremoved : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -73,23 +73,12 @@ namespace TopkaE.FPLDataDownloader.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PlayersSummary",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PlayersSummary", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Fixture",
+                name: "Fixtures",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    ElementId = table.Column<int>(nullable: false),
                     Code = table.Column<int>(nullable: false),
                     TeamH = table.Column<int>(nullable: false),
                     TeamHScore = table.Column<int>(nullable: true),
@@ -102,26 +91,26 @@ namespace TopkaE.FPLDataDownloader.Migrations
                     KickoffTime = table.Column<DateTime>(nullable: true),
                     EventName = table.Column<string>(nullable: true),
                     IsHome = table.Column<bool>(nullable: false),
-                    Difficulty = table.Column<int>(nullable: false),
-                    PlayerSummaryDataModelId = table.Column<int>(nullable: true)
+                    Difficulty = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Fixture", x => x.Id);
+                    table.PrimaryKey("PK_Fixtures", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Fixture_PlayersSummary_PlayerSummaryDataModelId",
-                        column: x => x.PlayerSummaryDataModelId,
-                        principalTable: "PlayersSummary",
+                        name: "FK_Fixtures_Elements_ElementId",
+                        column: x => x.ElementId,
+                        principalTable: "Elements",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "History",
+                name: "Histories",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    ElementId = table.Column<int>(nullable: false),
                     Element = table.Column<int>(nullable: false),
                     Fixture = table.Column<int>(nullable: false),
                     OpponentTeam = table.Column<int>(nullable: false),
@@ -152,44 +141,40 @@ namespace TopkaE.FPLDataDownloader.Migrations
                     TransfersBalance = table.Column<int>(nullable: false),
                     Selected = table.Column<int>(nullable: false),
                     TransfersIn = table.Column<int>(nullable: false),
-                    TransfersOut = table.Column<int>(nullable: false),
-                    PlayerSummaryDataModelId = table.Column<int>(nullable: true)
+                    TransfersOut = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_History", x => x.Id);
+                    table.PrimaryKey("PK_Histories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_History_PlayersSummary_PlayerSummaryDataModelId",
-                        column: x => x.PlayerSummaryDataModelId,
-                        principalTable: "PlayersSummary",
+                        name: "FK_Histories_Elements_ElementId",
+                        column: x => x.ElementId,
+                        principalTable: "Elements",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Fixture_PlayerSummaryDataModelId",
-                table: "Fixture",
-                column: "PlayerSummaryDataModelId");
+                name: "IX_Fixtures_ElementId",
+                table: "Fixtures",
+                column: "ElementId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_History_PlayerSummaryDataModelId",
-                table: "History",
-                column: "PlayerSummaryDataModelId");
+                name: "IX_Histories_ElementId",
+                table: "Histories",
+                column: "ElementId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Fixtures");
+
+            migrationBuilder.DropTable(
+                name: "Histories");
+
+            migrationBuilder.DropTable(
                 name: "Elements");
-
-            migrationBuilder.DropTable(
-                name: "Fixture");
-
-            migrationBuilder.DropTable(
-                name: "History");
-
-            migrationBuilder.DropTable(
-                name: "PlayersSummary");
         }
     }
 }

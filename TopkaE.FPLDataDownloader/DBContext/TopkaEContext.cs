@@ -11,7 +11,9 @@ namespace TopkaE.FPLDataDownloader.DBContext
         {
         }
         public DbSet<Element> Elements { get; set; }
-        public DbSet<PlayerSummaryDataModel> PlayersSummary { get; set; }
+        public DbSet<History> Histories { get; set; }
+        public DbSet<Fixture> Fixtures { get; set; }
+        //public DbSet<PlayerSummary> PlayersSummary { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

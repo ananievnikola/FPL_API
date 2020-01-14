@@ -11,7 +11,7 @@ namespace TopkaE.FPLDataDownloader.Models.OutputModels
         {
 
         }
-        public int Goals { get; set; }
+        public int GoalsScored { get; set; }
         public int Assists { get; set; }
     }
 }

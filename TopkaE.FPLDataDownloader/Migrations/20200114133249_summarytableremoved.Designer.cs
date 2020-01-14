@@ -9,8 +9,8 @@ using TopkaE.FPLDataDownloader.DBContext;
 namespace TopkaE.FPLDataDownloader.Migrations
 {
     [DbContext(typeof(TopkaEContext))]
-    [Migration("20191124141148_reinit")]
-    partial class reinit
+    [Migration("20200114133249_summarytableremoved")]
+    partial class summarytableremoved
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -143,6 +143,8 @@ namespace TopkaE.FPLDataDownloader.Migrations
 
                     b.Property<int>("Difficulty");
 
+                    b.Property<int>("ElementId");
+
                     b.Property<int?>("Event");
 
                     b.Property<string>("EventName");
@@ -154,8 +156,6 @@ namespace TopkaE.FPLDataDownloader.Migrations
                     b.Property<DateTime?>("KickoffTime");
 
                     b.Property<int>("Minutes");
-
-                    b.Property<int?>("PlayerSummaryDataModelId");
 
                     b.Property<bool>("ProvisionalStartTime");
 
@@ -169,9 +169,9 @@ namespace TopkaE.FPLDataDownloader.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PlayerSummaryDataModelId");
+                    b.HasIndex("ElementId");
 
-                    b.ToTable("Fixture");
+                    b.ToTable("Fixtures");
                 });
 
             modelBuilder.Entity("TopkaE.FPLDataDownloader.Models.InputModels.History", b =>
@@ -190,6 +190,8 @@ namespace TopkaE.FPLDataDownloader.Migrations
                     b.Property<string>("Creativity");
 
                     b.Property<int>("Element");
+
+                    b.Property<int>("ElementId");
 
                     b.Property<int>("Fixture");
 
@@ -212,8 +214,6 @@ namespace TopkaE.FPLDataDownloader.Migrations
                     b.Property<int>("PenaltiesMissed");
 
                     b.Property<int>("PenaltiesSaved");
-
-                    b.Property<int?>("PlayerSummaryDataModelId");
 
                     b.Property<int>("RedCards");
 
@@ -245,33 +245,25 @@ namespace TopkaE.FPLDataDownloader.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PlayerSummaryDataModelId");
+                    b.HasIndex("ElementId");
 
-                    b.ToTable("History");
-                });
-
-            modelBuilder.Entity("TopkaE.FPLDataDownloader.Models.InputModels.PlayerSummaryDataModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PlayersSummary");
+                    b.ToTable("Histories");
                 });
 
             modelBuilder.Entity("TopkaE.FPLDataDownloader.Models.InputModels.Fixture", b =>
                 {
-                    b.HasOne("TopkaE.FPLDataDownloader.Models.InputModels.PlayerSummaryDataModel")
+                    b.HasOne("TopkaE.FPLDataDownloader.Models.InputModels.Element")
                         .WithMany("Fixtures")
-                        .HasForeignKey("PlayerSummaryDataModelId");
+                        .HasForeignKey("ElementId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("TopkaE.FPLDataDownloader.Models.InputModels.History", b =>
                 {
-                    b.HasOne("TopkaE.FPLDataDownloader.Models.InputModels.PlayerSummaryDataModel")
-                        .WithMany("History")
-                        .HasForeignKey("PlayerSummaryDataModelId");
+                    b.HasOne("TopkaE.FPLDataDownloader.Models.InputModels.Element")
+                        .WithMany("Histories")
+                        .HasForeignKey("ElementId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

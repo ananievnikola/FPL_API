@@ -5,40 +5,10 @@ using System.Text;
 
 namespace TopkaE.FPLDataDownloader.Models.InputModels
 {
-    public class Fixture
-    {
-        public int Id { get; set; }
-        [JsonProperty(PropertyName = "code")]
-        public int Code { get; set; }
-        [JsonProperty(PropertyName = "team_h")]
-        public int TeamH { get; set; }
-        [JsonProperty(PropertyName = "team_h_score")]
-        public int? TeamHScore { get; set; }
-        [JsonProperty(PropertyName = "team_a")]
-        public int TeamA { get; set; }
-        [JsonProperty(PropertyName = "team_a_score")]
-        public int? TeamAScore { get; set; }
-        [JsonProperty(PropertyName = "event")]
-        public int? Event { get; set; }
-        [JsonProperty(PropertyName = "finished")]
-        public bool Finished { get; set; }
-        [JsonProperty(PropertyName = "minutes")]
-        public int Minutes { get; set; }
-        [JsonProperty(PropertyName = "provisional_start_time")]
-        public bool ProvisionalStartTime { get; set; }
-        [JsonProperty(PropertyName = "kickoff_time")]
-        public DateTime? KickoffTime { get; set; }
-        [JsonProperty(PropertyName = "event_name")]
-        public string EventName { get; set; }
-        [JsonProperty(PropertyName = "is_home")]
-        public bool IsHome { get; set; }
-        [JsonProperty(PropertyName = "difficulty")]
-        public int Difficulty { get; set; }
-    }
-
     public class History
     {
         public int Id { get; set; }
+        public int ElementId { get; set; }
         [JsonProperty(PropertyName = "element")]
         public int Element { get; set; }
         [JsonProperty(PropertyName = "fixture")]
@@ -101,41 +71,5 @@ namespace TopkaE.FPLDataDownloader.Models.InputModels
         public int TransfersIn { get; set; }
         [JsonProperty(PropertyName = "transfers_out")]
         public int TransfersOut { get; set; }
-    }
-
-    //public class HistoryPast
-    //{
-    //    public string season_name { get; set; }
-    //    public int element_code { get; set; }
-    //    public int start_cost { get; set; }
-    //    public int end_cost { get; set; }
-    //    public int total_points { get; set; }
-    //    public int minutes { get; set; }
-    //    public int goals_scored { get; set; }
-    //    public int assists { get; set; }
-    //    public int clean_sheets { get; set; }
-    //    public int goals_conceded { get; set; }
-    //    public int own_goals { get; set; }
-    //    public int penalties_saved { get; set; }
-    //    public int penalties_missed { get; set; }
-    //    public int yellow_cards { get; set; }
-    //    public int red_cards { get; set; }
-    //    public int saves { get; set; }
-    //    public int bonus { get; set; }
-    //    public int bps { get; set; }
-    //    public string influence { get; set; }
-    //    public string creativity { get; set; }
-    //    public string threat { get; set; }
-    //    public string ict_index { get; set; }
-    //}
-
-    public class PlayerSummaryDataModel
-    {
-        public int Id { get; set; }
-        [JsonProperty(PropertyName = "fixtures")]
-        public List<Fixture> Fixtures { get; set; }
-        [JsonProperty(PropertyName = "history")]
-        public List<History> History { get; set; }
-        //public List<HistoryPast> history_past { get; set; }
     }
 }

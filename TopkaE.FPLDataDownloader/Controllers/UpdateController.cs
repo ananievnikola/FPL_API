@@ -74,7 +74,9 @@ namespace TopkaE.FPLDataDownloader.Controllers
                             {
                                 player.LastUpdated = time;
                                 player.TeamName = PlayersUtilities.GetTeamName(player.TeamCode);
-                                //var playersSummary = await this.UpdatePlayerSummary(player.Id);
+                                var a = await this.UpdateFixturesAndHistory(player.Id);
+                                //Update Fixtures
+                                //Update History
                             }
                             _context.Elements.AddRange(players);
                             
@@ -95,7 +97,9 @@ namespace TopkaE.FPLDataDownloader.Controllers
                                 {
                                     _context.Add(player);
                                 }
-                                //var playersSummary = await this.UpdatePlayerSummary(player.Id);
+                                //Update Fixtures
+                                //Update History
+                                var a = await this.UpdateFixturesAndHistory(player.Id);
                                 result = true;
                             }
                         }
@@ -111,6 +115,36 @@ namespace TopkaE.FPLDataDownloader.Controllers
             return result;
         }
 
+        private async Task<bool> UpdateFixturesAndHistory(int id)
+        {
+            bool result = false;
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("id", id);
+            ((IParameterizedRequester)_playerSummaryRequester).SetUpParams(parameters);
+            string resp = await _playerSummaryRequester.ExecuteRequest();
+            if (!string.IsNullOrEmpty(resp))
+            {
+                HistoryAndFixtures hf = JsonConvert.DeserializeObject<HistoryAndFixtures>(resp);
+                List<Fixture> dbFixtures = await _context.Fixtures.AsNoTracking().ToListAsync();
+                //if (dbFixtures != null && dbFixtures.Count > 0)
+                //{
+                //    _context.RemoveRange(dbFixtures);
+                //}
+                //if (hf.Fixtures != null && hf.Fixtures.Count > 0)
+                //{
+                //    hf.Fixtures.ForEach(f => f.ElementId = 1);
+                //    _context.Fixtures.AddRange(hf.Fixtures);
+                //}
+            }
+            return result;
+        }
+
+        private class HistoryAndFixtures
+        {
+            public List<History> History { get; set; }
+            public List<Fixture> Fixtures { get; set; }
+        }
+
         //private async Task<bool> UpdatePlayerSummary(int id)
         //{
         //    bool result = false;
@@ -120,9 +154,9 @@ namespace TopkaE.FPLDataDownloader.Controllers
         //    string resp = await _playerSummaryRequester.ExecuteRequest();
         //    if (!string.IsNullOrEmpty(resp))
         //    {
-        //        PlayerSummaryDataModel playerSummary = JsonConvert.DeserializeObject<PlayerSummaryDataModel>(resp);
+        //        PlayerSummary playerSummary = JsonConvert.DeserializeObject<PlayerSummary>(resp);
         //        playerSummary.Id = id;
-        //        PlayerSummaryDataModel playerSummaryFromDb = _context.PlayersSummary.Find(playerSummary.Id);//.AsNoTracking().ToListAsync()
+        //        PlayerSummary playerSummaryFromDb = _context.PlayersSummary.Find(playerSummary.Id);//.AsNoTracking().ToListAsync()
         //        if (playerSummaryFromDb == null)
         //        {
         //            _context.Add(playerSummary);
@@ -131,13 +165,13 @@ namespace TopkaE.FPLDataDownloader.Controllers
         //        {
         //            _context.Update(playerSummary);
         //        }
-                
+
         //    }
         //    else
         //    {
         //        result = false;
         //    }
-            
+
         //    return result;
         //}
 

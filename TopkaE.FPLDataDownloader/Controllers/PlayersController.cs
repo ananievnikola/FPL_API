@@ -69,7 +69,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
                 return NotFound();
             }
 
-            return _serializer.Serialize(player, this); //player;
+            return _serializer.Serialize(player, this);
         }
 
         [HttpGet]
@@ -86,7 +86,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
             {
                 players = players.OrderByDescending(p => p.TransfersInEvent).ToList();
             }
-            List<EventTransfers> results = _mapper.Map<List<EventTransfers>>(players);//EventTransfers.MapList(players);
+            List<EventTransfers> results = _mapper.Map<List<EventTransfers>>(players);
             return _serializer.Serialize(results, this);
         }
 
@@ -103,7 +103,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
             {
                 players = players.OrderByDescending(p => p.TransfersOutEvent).ToList();
             }
-            List<EventTransfers> results = _mapper.Map<List<EventTransfers>>(players);//EventTransfers.MapList(players);
+            List<EventTransfers> results = _mapper.Map<List<EventTransfers>>(players);
             return _serializer.Serialize(results, this);
         }
 
@@ -120,7 +120,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
             {
                 players = players.OrderByDescending(p => p.GoalsScored).ToList();
             }
-            List<MostGoals> results = _mapper.Map<List<MostGoals>>(players);//MostGoals.MapList(players);
+            List<MostGoals> results = _mapper.Map<List<MostGoals>>(players);
             return _serializer.Serialize(results, this);
         }
 
@@ -129,15 +129,16 @@ namespace TopkaE.FPLDataDownloader.Controllers
         public async Task<ActionResult<IEnumerable<Element>>> GetMostGoalsForTeam()
         {
             List<Element> players = await _context.Elements.ToListAsync();
-            List<Element> result = new List<Element>();
+            List<Element> mostGoalsPlayers = new List<Element>();
             string[] allTeamNames = PlayersUtilities.GetAllTeamNames();
             foreach (var teamName in allTeamNames)
             {
                 var allTeamPlayers = players.Where(p => p.TeamName == teamName);
                 var maxScoredGoals = allTeamPlayers.Max(p => p.GoalsScored);
-                result.AddRange(allTeamPlayers.Where(p => p.GoalsScored == maxScoredGoals));
+                mostGoalsPlayers.AddRange(allTeamPlayers.Where(p => p.GoalsScored == maxScoredGoals));
             }
-            return _serializer.Serialize(result, this);
+            List<MostGoals> results = _mapper.Map<List<MostGoals>>(mostGoalsPlayers);
+            return _serializer.Serialize(mostGoalsPlayers, this);
         }
 
         [HttpGet]
@@ -145,15 +146,16 @@ namespace TopkaE.FPLDataDownloader.Controllers
         public async Task<ActionResult<IEnumerable<Element>>> GetMostGoalsInvolvement()
         {
             List<Element> players = await _context.Elements.ToListAsync();
-            List<Element> result = new List<Element>();
+            List<Element> mostGoalsPlayers = new List<Element>();
             string[] allTeamNames = PlayersUtilities.GetAllTeamNames();
             foreach (var teamName in allTeamNames)
             {
                 var allTeamPlayers = players.Where(p => p.TeamName == teamName);
                 var maxGoalsAssists = allTeamPlayers.Max(p => p.GoalsScored + p.Assists);
-                result.AddRange(allTeamPlayers.Where(p => p.GoalsScored + p.Assists == maxGoalsAssists));
+                mostGoalsPlayers.AddRange(allTeamPlayers.Where(p => p.GoalsScored + p.Assists == maxGoalsAssists));
             }
-            return _serializer.Serialize(result, this);
+            List<MostGoals> results = _mapper.Map<List<MostGoals>>(mostGoalsPlayers);
+            return _serializer.Serialize(results, this);
         }
 
         private bool ElementExists(int id)

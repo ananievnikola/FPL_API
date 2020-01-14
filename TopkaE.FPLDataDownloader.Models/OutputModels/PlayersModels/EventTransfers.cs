@@ -12,5 +12,6 @@ namespace TopkaE.FPLDataDownloader.Models.OutputModels
         }
         public int TransfersInEvent { get; set; }
         public int TransfersOutEvent { get; set; }
+        public string SelectedByPercent { get; set; }
     }
 }
