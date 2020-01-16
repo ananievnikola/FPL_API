@@ -9,16 +9,39 @@ namespace TopkaE.FPLDataDownloader.HttpRequests.Requesters
     public class PlayerSummaryRequester : RequesterBase, IRequester, IParameterizedRequester
     {
         protected override HttpClient _client { get; set; }
-        private int id = 0;
-        internal PlayerSummaryRequester(HttpClient client) : base(client)
+        private int _id = 0;
+        public PlayerSummaryRequester(HttpClient client) : base(client)
         {
         }
         public async Task<string> ExecuteRequest()
         {
             string responseBody = null;
-            if (id == 0)
+            if (_id == 0)
             {
                 throw new Exception("Call SetUpParams method first");
+            }
+            try
+            {
+                HttpResponseMessage response = await _client.GetAsync("https://fantasy.premierleague.com/api/element-summary/" + _id + "/");
+                response.EnsureSuccessStatusCode();
+                responseBody = await response.Content.ReadAsStringAsync();
+            }
+            catch (HttpRequestException e)
+            {
+                //Refactor
+                Console.WriteLine("\nException Caught!");
+                Console.WriteLine("Message :{0} ", e.Message);
+            }
+            return responseBody;
+        }
+
+
+        public async Task<string> ExecuteRequest(int id)
+        {
+            string responseBody = null;
+            if (id == 0)
+            {
+                throw new Exception("No id passed");
             }
             try
             {
@@ -34,7 +57,6 @@ namespace TopkaE.FPLDataDownloader.HttpRequests.Requesters
             }
             return responseBody;
         }
-
         /// <summary>
         /// This method is waiting for a parameter named id to be passed with the dictionary.
         /// Any other parameter passed with the dictionary will be ignored
@@ -50,7 +72,7 @@ namespace TopkaE.FPLDataDownloader.HttpRequests.Requesters
             {
                 throw new Exception("Parameter id is required");
             }
-            this.id = int.Parse(parameters["id"].ToString());
+            this._id = int.Parse(parameters["id"].ToString());
         }
     }
 }
