@@ -10,6 +10,7 @@ namespace TopkaE.FPLDataDownloader.HttpRequests.Requesters
     {
         protected override HttpClient _client { get; set; }
         private int _id = 0;
+        private readonly char _quotationMark = '\u0022';
         public PlayerSummaryRequester(HttpClient client) : base(client)
         {
         }
@@ -47,7 +48,10 @@ namespace TopkaE.FPLDataDownloader.HttpRequests.Requesters
             {
                 HttpResponseMessage response = await _client.GetAsync("https://fantasy.premierleague.com/api/element-summary/" + id + "/");
                 response.EnsureSuccessStatusCode();
-                responseBody = await response.Content.ReadAsStringAsync();
+                StringBuilder sb = new StringBuilder();
+                sb.Append(await response.Content.ReadAsStringAsync());
+                sb.Insert(1, _quotationMark + "id" + _quotationMark + ":" + id + ",");
+                responseBody = sb.ToString();//await response.Content.ReadAsStringAsync();
             }
             catch (HttpRequestException e)
             {

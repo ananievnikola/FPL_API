@@ -14,4 +14,4 @@
 
 - Paging of the results
 
-- AutoMapper to replace manual mapping
+- CHECK FOR EMPTY TABLES BEFORE SELECTING!!!

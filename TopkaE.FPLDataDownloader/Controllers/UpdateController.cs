@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -19,8 +20,6 @@ namespace TopkaE.FPLDataDownloader.Controllers
     {
         private readonly IRequester _playerRequester;
         private readonly IRequester _playerSummaryRequester;
-        //private readonly LeagueRequester _leagueRequester;
-        //private readonly AuthenticationRequester _authRequester;
         private readonly TopkaEContext _context;
         private HttpClient _client;
         private readonly RequesterFactory _requesterFactory;
@@ -40,12 +39,15 @@ namespace TopkaE.FPLDataDownloader.Controllers
         [Route("UpdateAll")]
         public async Task<bool> UpdateAll()
         {
+            Stopwatch stopwatch = new Stopwatch();
             bool result = false;
 
             Dictionary<string, bool> aggregateResults = new Dictionary<string, bool>();
             bool playersResult = await UpdatePlayers();
             aggregateResults.Add("players", playersResult);
             result = !aggregateResults.ContainsValue(false);
+            stopwatch.Stop();
+            Console.WriteLine(">>>>>>>>>>>>>>>>>" + stopwatch.Elapsed.Seconds + "<<<<<<<<<<<<<<<<");
             return result;
         }
 
@@ -67,18 +69,25 @@ namespace TopkaE.FPLDataDownloader.Controllers
                     List<int> ids = new List<int>();
                     if (players != null && players.Count > 0) //
                     {
-                        List<Element> playersFromDB = await _context.Elements.AsNoTracking().ToListAsync();
-                        if (playersFromDB == null)
+                        List<Element> playersFromDB = await _context.Elements?.AsNoTracking()?.ToListAsync();
+                        if (playersFromDB == null ||playersFromDB.Count == 0)
                         {
                             DateTime time = DateTime.Now;
                             foreach (var player in players)
                             {
                                 player.LastUpdated = time;
                                 player.TeamName = PlayersUtilities.GetTeamName(player.TeamCode);
-                                //var a = await this.UpdateFixturesAndHistory(player.Id);
-                                //Update Fixtures
-                                //Update History
                             }
+                            await this.AttachSummaryToPlayers(players);
+                            //ids = players.Select(p => p.Id).ToList();
+                            //var summaries = await UpdateFixturesAndHistory(ids);
+                            //foreach (var summary in summaries)
+                            //{
+                            //    Element currentElement = players.FirstOrDefault(p => p.Id == summary.Id);
+                            //    currentElement.Histories = summary.History;
+                            //    currentElement.Fixtures = summary.Fixtures;
+                            //}
+                            _context.AddRange(players);
                             result = true;
                         }
                         else if (playersFromDB != null)
@@ -96,55 +105,63 @@ namespace TopkaE.FPLDataDownloader.Controllers
                                 {
                                     _context.Add(player);
                                 }
+                                await this.AttachSummaryToPlayers(players);
+                                //ids = players.Select(p => p.Id).ToList();
+                                //var summaries = await UpdateFixturesAndHistory(ids);
+                                //foreach (var summary in summaries)
+                                //{
+                                //    Element currentElement = players.FirstOrDefault(p => p.Id == summary.Id);
+                                //    currentElement.Histories = summary.History;
+                                //    currentElement.Fixtures = summary.Fixtures;
+                                //}
                                 result = true;
                             }
-                        }
-
-                        foreach (var p in players)
-                        {
-                            ids.Add(p.Id);
-                        }
-                        var summary = await UpdateFixturesAndHistory(ids);//57 sec
-                        //I need to optimize it more
-                        foreach (var fixAndHistory in summary)
-                        {
                         }
                         _context.SaveChanges();
                     }
                     else
                     {
                         result = false;
-                        //add log
                     }
                 }
             }
             return result;
         }
 
-        private async Task<string[]> UpdateFixturesAndHistory(List<int> ids)
+        private async Task<List<HistoryAndFixtures>> UpdateFixturesAndHistory(List<int> ids)
         {
-            var watch = System.Diagnostics.Stopwatch.StartNew();
             List<Task<string>> responses = new List<Task<string>>();
             foreach (var id in ids)
             {
                 int loopId = id;
-                Dictionary<string, object> parameters = new Dictionary<string, object>();
-                parameters.Add("id", id);
                 PlayerSummaryRequester psr = new PlayerSummaryRequester(_client);
                 responses.Add(psr.ExecuteRequest(loopId));
             }
             string[] res = await Task.WhenAll(responses);
+            List<HistoryAndFixtures> resAsList = new List<HistoryAndFixtures>();
             foreach (var item in res)
             {
-                HistoryAndFixtures fAndH = JsonConvert.DeserializeObject<HistoryAndFixtures>(item);
+                resAsList.Add(JsonConvert.DeserializeObject<HistoryAndFixtures>(item));
             }
-            watch.Stop();
-            Console.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>NEW: " + watch.ElapsedMilliseconds / 1000);
-            return res;
+            return resAsList;
+        }
+
+        private async Task AttachSummaryToPlayers(List<Element> players)
+        {
+            List<int> ids = players.Select(p => p.Id).ToList();
+            var summaries = await UpdateFixturesAndHistory(ids);
+            foreach (var summary in summaries)
+            {
+                Element currentElement = players.FirstOrDefault(p => p.Id == summary.Id);
+                currentElement.Histories = summary.History;
+                currentElement.Fixtures = summary.Fixtures;
+            }
         }
 
         private class HistoryAndFixtures
         {
+            [JsonProperty(PropertyName = "id")]
+            public int Id { get; set; }
             public List<History> History { get; set; }
             public List<Fixture> Fixtures { get; set; }
         }

@@ -14,6 +14,7 @@ using TopkaE.FPLDataDownloader.Utilities;
 
 namespace TopkaE.FPLDataDownloader.Controllers
 {
+    //TODO: CHECK FOR EMPTY TABLES BEFORE SELECTING!!!
     [Route("api/Players")]
     [ApiController]
     public class PlayersController : ControllerBase
