@@ -159,6 +159,23 @@ namespace TopkaE.FPLDataDownloader.Controllers
             return _serializer.Serialize(results, this);
         }
 
+        [HttpGet]
+        [Route("MostBPS")]
+        public async Task<ActionResult<IEnumerable<Element>>> GetMostBPS()
+        {
+            List<Element> players = await _context.Elements.ToListAsync();
+            List<Element> mostGoalsPlayers = new List<Element>();
+            string[] allTeamNames = PlayersUtilities.GetAllTeamNames();
+            foreach (var teamName in allTeamNames)
+            {
+                var allTeamPlayers = players.Where(p => p.TeamName == teamName);
+                var maxGoalsAssists = allTeamPlayers.Max(p => p.GoalsScored + p.Assists);
+                mostGoalsPlayers.AddRange(allTeamPlayers.Where(p => p.GoalsScored + p.Assists == maxGoalsAssists));
+            }
+            List<MostGoals> results = _mapper.Map<List<MostGoals>>(mostGoalsPlayers);
+            return _serializer.Serialize(results, this);
+        }
+
         private bool ElementExists(int id)
         {
             return _context.Elements.Any(e => e.Id == id);

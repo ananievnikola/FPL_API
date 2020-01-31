@@ -70,24 +70,17 @@ namespace TopkaE.FPLDataDownloader.Controllers
                     if (players != null && players.Count > 0) //
                     {
                         List<Element> playersFromDB = await _context.Elements?.AsNoTracking()?.ToListAsync();
-                        if (playersFromDB == null ||playersFromDB.Count == 0)
+                        if (playersFromDB == null || playersFromDB.Count == 0)
                         {
                             DateTime time = DateTime.Now;
                             foreach (var player in players)
                             {
                                 player.LastUpdated = time;
                                 player.TeamName = PlayersUtilities.GetTeamName(player.TeamCode);
-                            }
-                            await this.AttachSummaryToPlayers(players);
-                            //ids = players.Select(p => p.Id).ToList();
-                            //var summaries = await UpdateFixturesAndHistory(ids);
-                            //foreach (var summary in summaries)
-                            //{
-                            //    Element currentElement = players.FirstOrDefault(p => p.Id == summary.Id);
-                            //    currentElement.Histories = summary.History;
-                            //    currentElement.Fixtures = summary.Fixtures;
-                            //}
+                            }                           
                             _context.AddRange(players);
+                            _context.SaveChanges();
+                            await this.AttachSummaryToPlayers(players);
                             result = true;
                         }
                         else if (playersFromDB != null)
@@ -105,15 +98,8 @@ namespace TopkaE.FPLDataDownloader.Controllers
                                 {
                                     _context.Add(player);
                                 }
+                                _context.SaveChanges();
                                 await this.AttachSummaryToPlayers(players);
-                                //ids = players.Select(p => p.Id).ToList();
-                                //var summaries = await UpdateFixturesAndHistory(ids);
-                                //foreach (var summary in summaries)
-                                //{
-                                //    Element currentElement = players.FirstOrDefault(p => p.Id == summary.Id);
-                                //    currentElement.Histories = summary.History;
-                                //    currentElement.Fixtures = summary.Fixtures;
-                                //}
                                 result = true;
                             }
                         }
