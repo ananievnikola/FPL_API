@@ -1,4 +1,8 @@
-﻿- Add [JsonProperty(PropertyName = "xxx")] to all input models
+﻿- Migrate to MariaDB
+	* add secret manager for the passwords
+	* Develop custom attributes to wrap the current attibutes in one (optional)
+
+- Add [JsonProperty(PropertyName = "xxx")] to all input models
 
 - Review all object type props in the models 
 
@@ -12,4 +16,3 @@
 
 - Paging of the results
 
-- CHECK FOR EMPTY TABLES BEFORE SELECTING!!!

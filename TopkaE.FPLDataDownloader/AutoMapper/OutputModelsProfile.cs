@@ -17,12 +17,4 @@ namespace TopkaE.FPLDataDownloader.AutoMapper
         }
     }
 
-   
-//public class DomainProfile : Profile
-//    {
-//        public DomainProfile()
-//        {
-//            CreateMap<DomainUser, UserViewModel>();
-//        }
-//    }
 }

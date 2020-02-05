@@ -30,7 +30,11 @@ namespace TopkaE.FPLDataDownloader
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TopkaEContext>(options => options.UseSqlite("Data Source=" + Environment.CurrentDirectory + "\\Database\\fpldata.db"));
+            services.AddDbContext<TopkaEContext>(options => options.
+                //UseSqlite("Data Source=" + Environment.CurrentDirectory + "\\Database\\fpldata.db").
+                UseMySql(Configuration.GetConnectionString("MariaDBConnection"))
+            );
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             var mappingConfig = new MapperConfiguration(mc =>
             {
