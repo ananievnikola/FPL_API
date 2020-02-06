@@ -80,7 +80,15 @@ namespace TopkaE.FPLDataDownloader.Controllers
                             }                           
                             _context.AddRange(players);
                             _context.SaveChanges();
-                            await this.AttachSummaryToPlayers(players);
+                            List<HistoryAndFixtures> historyAndFixtures = await this.DownloadFixturesAndResults(players);
+                            foreach (var fixOrRes in historyAndFixtures)
+                            {
+                                fixOrRes.Fixtures.ForEach(i => i.ElementId = fixOrRes.Id);
+                                fixOrRes.History.ForEach(i => i.ElementId = fixOrRes.Id);
+                                _context.AddRange(fixOrRes.Fixtures);
+                                _context.AddRange(fixOrRes.History);
+                            }
+                            _context.SaveChanges();
                             result = true;
                         }
                         else if (playersFromDB != null)
@@ -99,7 +107,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
                                     _context.Add(player);
                                 }
                                 _context.SaveChanges();
-                                await this.AttachSummaryToPlayers(players);
+                                await this.DownloadFixturesAndResults(players);
                                 result = true;
                             }
                         }
@@ -114,9 +122,31 @@ namespace TopkaE.FPLDataDownloader.Controllers
             return result;
         }
 
-        private async Task<List<HistoryAndFixtures>> UpdateFixturesAndHistory(List<int> ids)
+        //private async Task<List<HistoryAndFixtures>> UpdateFixturesAndHistory(List<int> ids)
+        //{
+        //    List<Task<string>> responses = new List<Task<string>>();
+        //    foreach (var id in ids)
+        //    {
+        //        int loopId = id;
+        //        PlayerSummaryRequester psr = new PlayerSummaryRequester(_client);
+        //        responses.Add(psr.ExecuteRequest(loopId));
+        //    }
+        //    string[] res = await Task.WhenAll(responses);
+        //    List<HistoryAndFixtures> resAsList = new List<HistoryAndFixtures>();
+        //    foreach (var item in res)
+        //    {
+        //        //HistoryAndFixtures currentFixture = JsonConvert.DeserializeObject<HistoryAndFixtures>(item);
+        //        //currentFixture.History.Ele
+        //        resAsList.Add(JsonConvert.DeserializeObject<HistoryAndFixtures>(item));
+                
+        //    }
+        //    return resAsList;
+        //}
+
+        private async Task<List<HistoryAndFixtures>> DownloadFixturesAndResults(List<Element> players)
         {
             List<Task<string>> responses = new List<Task<string>>();
+            List<int> ids = players.Select(p => p.Id).ToList();
             foreach (var id in ids)
             {
                 int loopId = id;
@@ -127,21 +157,35 @@ namespace TopkaE.FPLDataDownloader.Controllers
             List<HistoryAndFixtures> resAsList = new List<HistoryAndFixtures>();
             foreach (var item in res)
             {
+                HistoryAndFixtures currentFixture = JsonConvert.DeserializeObject<HistoryAndFixtures>(item);
+                foreach (var fixture in currentFixture.Fixtures)
+                {
+                    fixture.ElementId = currentFixture.Id;
+                }
+                foreach (var history in currentFixture.History)
+                {
+                    history.ElementId = currentFixture.Id;
+                }
                 resAsList.Add(JsonConvert.DeserializeObject<HistoryAndFixtures>(item));
+
             }
             return resAsList;
-        }
-
-        private async Task AttachSummaryToPlayers(List<Element> players)
-        {
-            List<int> ids = players.Select(p => p.Id).ToList();
-            var summaries = await UpdateFixturesAndHistory(ids);
-            foreach (var summary in summaries)
-            {
-                Element currentElement = players.FirstOrDefault(p => p.Id == summary.Id);
-                currentElement.Histories = summary.History;
-                currentElement.Fixtures = summary.Fixtures;
-            }
+            
+            //var summaries = await UpdateFixturesAndHistory(ids);
+            //foreach (var summary in summaries)
+            //{
+            //    Element currentElement = players.FirstOrDefault(p => p.Id == summary.Id);
+            //    currentElement.Histories = summary.History;
+            //    currentElement.Fixtures = summary.Fixtures;
+            //    //foreach (var historyEntry in currentElement.Histories)
+            //    //{
+            //    //    historyEntry.ElementId = currentElement.Id;
+            //    //}
+            //    //foreach (var fixtureEntry in currentElement.Fixtures)
+            //    //{
+            //    //    fixtureEntry.ElementId = currentElement.Id;
+            //    //}
+            //}
         }
 
         private class HistoryAndFixtures

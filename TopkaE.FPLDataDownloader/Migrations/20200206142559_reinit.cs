@@ -1,9 +1,10 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TopkaE.FPLDataDownloader.Migrations
 {
-    public partial class summarytableremoved : Migration
+    public partial class reinit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +13,7 @@ namespace TopkaE.FPLDataDownloader.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ChanceOfPlayingNextRound = table.Column<int>(nullable: true),
                     ChanceOfPlayingThisRound = table.Column<int>(nullable: true),
                     Code = table.Column<int>(nullable: false),
@@ -22,31 +23,31 @@ namespace TopkaE.FPLDataDownloader.Migrations
                     CostChangeStartFall = table.Column<int>(nullable: false),
                     DreamteamCount = table.Column<int>(nullable: false),
                     ElementType = table.Column<int>(nullable: false),
-                    EpNext = table.Column<string>(nullable: true),
-                    EpThis = table.Column<string>(nullable: true),
+                    EpNext = table.Column<string>(type: "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
+                    EpThis = table.Column<string>(type: "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
                     EventPoints = table.Column<int>(nullable: false),
-                    FirstName = table.Column<string>(nullable: true),
-                    Form = table.Column<string>(nullable: true),
+                    FirstName = table.Column<string>(type: "VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
+                    Form = table.Column<string>(type: "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
                     InDreamteam = table.Column<bool>(nullable: false),
-                    News = table.Column<string>(nullable: true),
+                    News = table.Column<string>(type: "VARCHAR(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
                     NewsAdded = table.Column<DateTime>(nullable: true),
                     NowCost = table.Column<int>(nullable: false),
-                    Photo = table.Column<string>(nullable: true),
-                    PointsPerGame = table.Column<string>(nullable: true),
-                    SecondName = table.Column<string>(nullable: true),
-                    SelectedByPercent = table.Column<string>(nullable: true),
+                    Photo = table.Column<string>(type: "VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
+                    PointsPerGame = table.Column<string>(type: "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
+                    SecondName = table.Column<string>(type: "VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
+                    SelectedByPercent = table.Column<string>(type: "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
                     Special = table.Column<bool>(nullable: false),
-                    Status = table.Column<string>(nullable: true),
-                    Team = table.Column<int>(nullable: false),
+                    Status = table.Column<string>(type: "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
+                    Team = table.Column<string>(type: "VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: false),
                     TeamCode = table.Column<int>(nullable: false),
                     TotalPoints = table.Column<int>(nullable: false),
                     TransfersIn = table.Column<int>(nullable: false),
                     TransfersInEvent = table.Column<int>(nullable: false),
                     TransfersOut = table.Column<int>(nullable: false),
                     TransfersOutEvent = table.Column<int>(nullable: false),
-                    ValueForm = table.Column<string>(nullable: true),
-                    ValueSeason = table.Column<string>(nullable: true),
-                    WebName = table.Column<string>(nullable: true),
+                    ValueForm = table.Column<string>(type: "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
+                    ValueSeason = table.Column<string>(type: "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
+                    WebName = table.Column<string>(type: "VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
                     Minutes = table.Column<int>(nullable: false),
                     GoalsScored = table.Column<int>(nullable: false),
                     Assists = table.Column<int>(nullable: false),
@@ -60,12 +61,12 @@ namespace TopkaE.FPLDataDownloader.Migrations
                     Saves = table.Column<int>(nullable: false),
                     Bonus = table.Column<int>(nullable: false),
                     Bps = table.Column<int>(nullable: false),
-                    Influence = table.Column<string>(nullable: true),
-                    Creativity = table.Column<string>(nullable: true),
-                    Threat = table.Column<string>(nullable: true),
-                    IctIndex = table.Column<string>(nullable: true),
+                    Influence = table.Column<string>(type: "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
+                    Creativity = table.Column<string>(type: "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
+                    Threat = table.Column<string>(type: "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
+                    IctIndex = table.Column<string>(type: "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
                     LastUpdated = table.Column<DateTime>(nullable: true),
-                    TeamName = table.Column<string>(nullable: true)
+                    TeamName = table.Column<string>(type: "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -77,7 +78,7 @@ namespace TopkaE.FPLDataDownloader.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ElementId = table.Column<int>(nullable: false),
                     Code = table.Column<int>(nullable: false),
                     TeamH = table.Column<int>(nullable: false),
@@ -89,7 +90,7 @@ namespace TopkaE.FPLDataDownloader.Migrations
                     Minutes = table.Column<int>(nullable: false),
                     ProvisionalStartTime = table.Column<bool>(nullable: false),
                     KickoffTime = table.Column<DateTime>(nullable: true),
-                    EventName = table.Column<string>(nullable: true),
+                    EventName = table.Column<string>(type: "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
                     IsHome = table.Column<bool>(nullable: false),
                     Difficulty = table.Column<int>(nullable: false)
                 },
@@ -109,7 +110,7 @@ namespace TopkaE.FPLDataDownloader.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ElementId = table.Column<int>(nullable: false),
                     Element = table.Column<int>(nullable: false),
                     Fixture = table.Column<int>(nullable: false),
@@ -133,10 +134,10 @@ namespace TopkaE.FPLDataDownloader.Migrations
                     Saves = table.Column<int>(nullable: false),
                     Bonus = table.Column<int>(nullable: false),
                     BPS = table.Column<int>(nullable: false),
-                    Influence = table.Column<string>(nullable: true),
-                    Creativity = table.Column<string>(nullable: true),
-                    Threat = table.Column<string>(nullable: true),
-                    ICTndex = table.Column<string>(nullable: true),
+                    Influence = table.Column<string>(type: "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
+                    Creativity = table.Column<string>(type: "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
+                    Threat = table.Column<string>(type: "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
+                    ICTndex = table.Column<string>(type: "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", nullable: true),
                     Value = table.Column<int>(nullable: false),
                     TransfersBalance = table.Column<int>(nullable: false),
                     Selected = table.Column<int>(nullable: false),

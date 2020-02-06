@@ -1,5 +1,5 @@
 ﻿- Migrate to MariaDB
-	* add secret manager for the passwords
+	* Fix the update method
 	* Develop custom attributes to wrap the current attibutes in one (optional)
 
 - Add [JsonProperty(PropertyName = "xxx")] to all input models

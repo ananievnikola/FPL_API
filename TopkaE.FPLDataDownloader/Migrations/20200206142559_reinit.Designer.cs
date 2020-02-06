@@ -9,14 +9,15 @@ using TopkaE.FPLDataDownloader.DBContext;
 namespace TopkaE.FPLDataDownloader.Migrations
 {
     [DbContext(typeof(TopkaEContext))]
-    [Migration("20200114133249_summarytableremoved")]
-    partial class summarytableremoved
+    [Migration("20200206142559_reinit")]
+    partial class reinit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("TopkaE.FPLDataDownloader.Models.InputModels.Element", b =>
                 {
@@ -45,37 +46,45 @@ namespace TopkaE.FPLDataDownloader.Migrations
 
                     b.Property<int>("CostChangeStartFall");
 
-                    b.Property<string>("Creativity");
+                    b.Property<string>("Creativity")
+                        .HasColumnType("VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
                     b.Property<int>("DreamteamCount");
 
                     b.Property<int>("ElementType");
 
-                    b.Property<string>("EpNext");
+                    b.Property<string>("EpNext")
+                        .HasColumnType("VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
-                    b.Property<string>("EpThis");
+                    b.Property<string>("EpThis")
+                        .HasColumnType("VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
                     b.Property<int>("EventPoints");
 
-                    b.Property<string>("FirstName");
+                    b.Property<string>("FirstName")
+                        .HasColumnType("VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
-                    b.Property<string>("Form");
+                    b.Property<string>("Form")
+                        .HasColumnType("VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
                     b.Property<int>("GoalsConceded");
 
                     b.Property<int>("GoalsScored");
 
-                    b.Property<string>("IctIndex");
+                    b.Property<string>("IctIndex")
+                        .HasColumnType("VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
                     b.Property<bool>("InDreamteam");
 
-                    b.Property<string>("Influence");
+                    b.Property<string>("Influence")
+                        .HasColumnType("VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
                     b.Property<DateTime?>("LastUpdated");
 
                     b.Property<int>("Minutes");
 
-                    b.Property<string>("News");
+                    b.Property<string>("News")
+                        .HasColumnType("VARCHAR(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
                     b.Property<DateTime?>("NewsAdded");
 
@@ -87,29 +96,39 @@ namespace TopkaE.FPLDataDownloader.Migrations
 
                     b.Property<int>("PenaltiesSaved");
 
-                    b.Property<string>("Photo");
+                    b.Property<string>("Photo")
+                        .HasColumnType("VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
-                    b.Property<string>("PointsPerGame");
+                    b.Property<string>("PointsPerGame")
+                        .HasColumnType("VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
                     b.Property<int>("RedCards");
 
                     b.Property<int>("Saves");
 
-                    b.Property<string>("SecondName");
+                    b.Property<string>("SecondName")
+                        .HasColumnType("VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
-                    b.Property<string>("SelectedByPercent");
+                    b.Property<string>("SelectedByPercent")
+                        .HasColumnType("VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
                     b.Property<bool>("Special");
 
-                    b.Property<string>("Status");
+                    b.Property<string>("Status")
+                        .HasColumnType("VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
-                    b.Property<int>("Team");
+                    b.Property<string>("Team")
+                        .IsRequired()
+                        .HasConversion(new ValueConverter<string, string>(v => default(string), v => default(string), new ConverterMappingHints(size: 64)))
+                        .HasColumnType("VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
                     b.Property<int>("TeamCode");
 
-                    b.Property<string>("TeamName");
+                    b.Property<string>("TeamName")
+                        .HasColumnType("VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
-                    b.Property<string>("Threat");
+                    b.Property<string>("Threat")
+                        .HasColumnType("VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
                     b.Property<int>("TotalPoints");
 
@@ -121,11 +140,14 @@ namespace TopkaE.FPLDataDownloader.Migrations
 
                     b.Property<int>("TransfersOutEvent");
 
-                    b.Property<string>("ValueForm");
+                    b.Property<string>("ValueForm")
+                        .HasColumnType("VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
-                    b.Property<string>("ValueSeason");
+                    b.Property<string>("ValueSeason")
+                        .HasColumnType("VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
-                    b.Property<string>("WebName");
+                    b.Property<string>("WebName")
+                        .HasColumnType("VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
                     b.Property<int>("YellowCards");
 
@@ -147,7 +169,8 @@ namespace TopkaE.FPLDataDownloader.Migrations
 
                     b.Property<int?>("Event");
 
-                    b.Property<string>("EventName");
+                    b.Property<string>("EventName")
+                        .HasColumnType("VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
                     b.Property<bool>("Finished");
 
@@ -187,7 +210,8 @@ namespace TopkaE.FPLDataDownloader.Migrations
 
                     b.Property<int>("CleanSheets");
 
-                    b.Property<string>("Creativity");
+                    b.Property<string>("Creativity")
+                        .HasColumnType("VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
                     b.Property<int>("Element");
 
@@ -199,9 +223,11 @@ namespace TopkaE.FPLDataDownloader.Migrations
 
                     b.Property<int>("GoalsScored");
 
-                    b.Property<string>("ICTndex");
+                    b.Property<string>("ICTndex")
+                        .HasColumnType("VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
-                    b.Property<string>("Influence");
+                    b.Property<string>("Influence")
+                        .HasColumnType("VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
                     b.Property<DateTime?>("KickoffTime");
 
@@ -227,7 +253,8 @@ namespace TopkaE.FPLDataDownloader.Migrations
 
                     b.Property<int?>("TeamHScore");
 
-                    b.Property<string>("Threat");
+                    b.Property<string>("Threat")
+                        .HasColumnType("VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
                     b.Property<int>("TotalPoints");
 
