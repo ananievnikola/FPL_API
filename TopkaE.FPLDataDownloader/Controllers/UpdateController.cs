@@ -79,7 +79,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
                                 player.TeamName = PlayersUtilities.GetTeamName(player.TeamCode);
                             }                           
                             _context.AddRange(players);
-                            _context.SaveChanges();
+                            //_context.SaveChanges();
                             List<HistoryAndFixtures> historyAndFixtures = await this.DownloadFixturesAndResults(players);
                             foreach (var fixOrRes in historyAndFixtures)
                             {

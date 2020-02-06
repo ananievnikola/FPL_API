@@ -23,6 +23,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
         private readonly OutputCamelCaseSerializer _serializer;
         private readonly CSVConverter _csvConv;
         private readonly IMapper _mapper;
+        private readonly string _includeHistory = "history";
 
         public PlayersController(TopkaEContext context, IHttpClientFactory clientFactory, IMapper mapper)
         {
@@ -175,6 +176,30 @@ namespace TopkaE.FPLDataDownloader.Controllers
             List<MostGoals> results = _mapper.Map<List<MostGoals>>(mostGoalsPlayers);
             return _serializer.Serialize(results, this);
         }
+
+        //        SELECT
+        //    e.firstname
+        //    , e.secondname
+        //    , h.round
+        //    , h.bps
+        //    , h.minutes
+        //FROM elements e
+        //INNER JOIN histories h ON e.id = h.elementid
+        //WHERE e.Id = 191
+        [HttpGet]
+        [Route("PlayerBPS")]
+        public async Task<ActionResult<IEnumerable<Element>>> GetPlayerBPS(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        private Element GetPlayerInclude(string includedChildObject, int id)
+        {
+            return _context.Elements
+                .Include(h => h.Histories)
+                .FirstOrDefault(p => p.Id == id);
+        }
+
 
         private bool ElementExists(int id)
         {
