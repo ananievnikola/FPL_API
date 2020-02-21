@@ -14,6 +14,8 @@ namespace TopkaE.FPLDataDownloader.AutoMapper
         {
             CreateMap<Element, EventTransfers>();
             CreateMap<Element, MostGoals>();
+            CreateMap<Element, PlayerBPSHistory>();
+            CreateMap<History, BPSModel>();
         }
     }
 

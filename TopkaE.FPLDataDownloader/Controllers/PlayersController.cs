@@ -190,14 +190,19 @@ namespace TopkaE.FPLDataDownloader.Controllers
         [Route("PlayerBPS")]
         public async Task<ActionResult<IEnumerable<Element>>> GetPlayerBPS(int id)
         {
-            throw new NotImplementedException();
+            Element player = await GetPlayerIncludeFixturesAndHistory(id);
+            PlayerBPSHistory results = _mapper.Map<PlayerBPSHistory>(player);
+            List<BPSModel> BPSModel = _mapper.Map<List<BPSModel>>(results.Histories);
+            results.Histories = results.Histories.OrderBy(h => h.Round).ToList();
+            return _serializer.Serialize(results, this);
         }
 
-        private Element GetPlayerInclude(string includedChildObject, int id)
+        private async Task<Element> GetPlayerIncludeFixturesAndHistory(int id)
         {
-            return _context.Elements
+            return await _context.Elements
                 .Include(h => h.Histories)
-                .FirstOrDefault(p => p.Id == id);
+                .Include(f => f.Fixtures)
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
 
 
