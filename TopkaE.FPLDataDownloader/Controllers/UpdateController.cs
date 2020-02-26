@@ -121,8 +121,6 @@ namespace TopkaE.FPLDataDownloader.Controllers
 
         private async Task<List<HistoryAndFixtures>> DownloadFixturesAndResults(List<Element> players)
         {
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
             List<Task<string>> responses = new List<Task<string>>();
             List<int> ids = players.Select(p => p.Id).ToList();
             foreach (var id in ids)
@@ -147,8 +145,6 @@ namespace TopkaE.FPLDataDownloader.Controllers
                 resAsList.Add(JsonConvert.DeserializeObject<HistoryAndFixtures>(item));
 
             }
-            stopwatch.Stop();
-            Console.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>Time elapsed: {0}", stopwatch.Elapsed);
             return resAsList;
         }
 

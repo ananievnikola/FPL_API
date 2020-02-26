@@ -26,10 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Database\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\TopkaE.FPLDataDownloader.HttpRequests\TopkaE.FPLDataDownloader.HttpRequests.csproj" />
     <ProjectReference Include="..\TopkaE.FPLDataDownloader.Models\TopkaE.FPLDataDownloader.Models.csproj" />
   </ItemGroup>

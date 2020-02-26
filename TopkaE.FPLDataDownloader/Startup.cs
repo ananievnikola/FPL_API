@@ -15,6 +15,7 @@ using TopkaE.FPLDataDownloader.DBContext;
 using Newtonsoft.Json.Serialization;
 using AutoMapper;
 using TopkaE.FPLDataDownloader.AutoMapper;
+using TopkaE.FPLDataDownloader.Repository;
 
 namespace TopkaE.FPLDataDownloader
 {
@@ -43,6 +44,7 @@ namespace TopkaE.FPLDataDownloader
 
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
+            services.AddScoped<IPlayerRepository, EFPlayerRepository>();
             services.AddHttpClient();
         }
 

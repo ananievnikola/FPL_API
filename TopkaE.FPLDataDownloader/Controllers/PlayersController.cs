@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using TopkaE.FPLDataDownloader.DBContext;
 using TopkaE.FPLDataDownloader.Models.InputModels;
 using TopkaE.FPLDataDownloader.Models.OutputModels;
+using TopkaE.FPLDataDownloader.Repository;
 using TopkaE.FPLDataDownloader.Utilities;
 
 namespace TopkaE.FPLDataDownloader.Controllers
@@ -23,15 +24,19 @@ namespace TopkaE.FPLDataDownloader.Controllers
         private readonly OutputCamelCaseSerializer _serializer;
         private readonly CSVConverter _csvConv;
         private readonly IMapper _mapper;
-        private readonly string _includeHistory = "history";
 
-        public PlayersController(TopkaEContext context, IHttpClientFactory clientFactory, IMapper mapper)
+        private readonly IPlayerRepository _repository;
+
+        public PlayersController(TopkaEContext context, IHttpClientFactory clientFactory, IMapper mapper, IPlayerRepository repository)
         {
+            _repository = repository;
             _serializer = new OutputCamelCaseSerializer();
             _context = context;
             _csvConv = new CSVConverter();
             _mapper = mapper;
         }
+
+        
 
         // GET: api/Players
         [HttpGet]
@@ -39,17 +44,8 @@ namespace TopkaE.FPLDataDownloader.Controllers
         [Route("Get")]
         public async Task<ActionResult<IEnumerable<Element>>> GetPlayers(int? points, string team)
         {
-            //TODO: Optimize the ToList() calls
-            List<Element> players = await _context.Elements.ToListAsync();
-            if (points != null)
-            {
-                players = players.Where(p => p.TotalPoints > points).ToList();
-            }
-            if (!string.IsNullOrEmpty(team))
-            {
-                team = team.Replace("_", " ");
-                players = players.Where(p => p.TeamName.Equals(team, StringComparison.InvariantCultureIgnoreCase)).ToList();
-            }
+            //var headers;//this.HttpContext.Request.Headers
+            IEnumerable<Element> players = await Task.Run(() => _repository.GetAll(points, team));
             return _serializer.Serialize(players, this);
         }
 
@@ -64,6 +60,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Element>> GetElement(int id)
         {
+            //GetById()
             var player = await _context.Elements.FindAsync(id);
 
             if (player == null)
@@ -78,6 +75,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
         [Route("MostTransferedIn")]
         public async Task<ActionResult<IEnumerable<EventTransfers>>> GetMostTransferedIn(int? top)
         {
+            //GetMostTransferedIn()
             List<Element> players = await _context.Elements.ToListAsync();
             
             if (top != null || top != 0)
