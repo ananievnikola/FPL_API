@@ -11,13 +11,7 @@ namespace TopkaE.FPLDataDownloader.Repository
     {
         //maybe a mapper between Element and another entity (Player) so I need output models only????
         IEnumerable<Element> GetAll(int? points, string team);
-        Element GetById();
-        IEnumerable<EventTransfers> GetMostTransferedIn(bool isCsv = false);
-        //IEnumerable<Employee> GetAll();
-        //Employee GetById(int EmployeeID);
-        //void Insert(Employee employee);
-        //void Update(Employee employee);
-        //void Delete(int EmployeeID);
-
+        Element GetById(int id);
+        IEnumerable<EventTransfers> GetMostTransferedIn();
     }
 }

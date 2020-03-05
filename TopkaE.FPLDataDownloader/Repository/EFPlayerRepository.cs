@@ -30,12 +30,13 @@ namespace TopkaE.FPLDataDownloader.Repository
             return players;
         }
 
-        public Element GetById()
+        public Element GetById(int id)
         {
-            throw new NotImplementedException();
+            var player = _context.Elements.Find(id);
+            return player;
         }
 
-        public IEnumerable<EventTransfers> GetMostTransferedIn(bool isCsv = false)
+        public IEnumerable<EventTransfers> GetMostTransferedIn()
         {
             throw new NotImplementedException();
         }

@@ -10,5 +10,9 @@ namespace TopkaE.FPLDataDownloader.Utilities
         {
             return CsvSerializer.SerializeToString(objToConvert);
         }
+        public string ConvertToCSV<T>(T objToConvert) where T : IFPLModel
+        {
+            return CsvSerializer.SerializeToString(objToConvert);
+        }
     }
 }
