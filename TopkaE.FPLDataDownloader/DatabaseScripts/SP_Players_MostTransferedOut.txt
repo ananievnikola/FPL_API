@@ -1,0 +1,38 @@
+﻿DELIMITER //
+
+CREATE OR REPLACE PROCEDURE SP_Players_MostTransferedOut(IN Top INT)
+
+BEGIN
+
+	IF Top IS NULL THEN 
+	
+	SELECT 
+		e.Id
+		, e.FirstName
+		, e.SecondName
+		, e.TeamName
+		, e.TransfersInEvent
+		, e.TransfersOutEvent
+		, e.SelectedByPercent
+	FROM ELEMENTS e
+	ORDER BY e.TransfersOutEvent DESC;
+	
+	ELSE
+	
+	SELECT 
+		e.Id
+		, e.FirstName
+		, e.SecondName
+		, e.TeamName
+		, e.TransfersInEvent
+		, e.TransfersOutEvent
+		, e.SelectedByPercent
+	FROM ELEMENTS e
+	ORDER BY e.TransfersOutEvent DESC
+	LIMIT Top;
+	
+	END IF; 
+
+END; //
+
+DELIMITER ;

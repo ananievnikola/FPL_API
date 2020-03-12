@@ -1,0 +1,65 @@
+﻿DELIMITER //
+
+CREATE OR REPLACE PROCEDURE SP_Players_GetById(IN PlayerId INT)
+
+BEGIN
+
+	SELECT 
+   	e.ChanceOfPlayingNextRound
+   	, e.ChanceOfPlayingThisRound
+   	, e.`Code`
+   	, e.CostChangeEvent
+   	, e.CostChangeEventFall
+   	, e.CostChangeStart
+   	, e.CostChangeStartFall
+   	, e.DreamteamCount
+   	, e.ElementType
+   	, e.EpNext
+   	, e.EpThis
+   	, e.EventPoints
+	, e.FirstName
+   	, e.Form
+   	, e.Id
+   	, e.InDreamteam
+   	, e.News
+   	, e.NewsAdded
+   	, e.NowCost
+   	, e.Photo
+   	, e.PointsPerGame
+   	, e.SecondName
+   	, e.SelectedByPercent
+   	, e.Special
+   	, e.`Status`
+   	, e.Team
+   	, e.TeamCode
+   	, e.TotalPoints
+   	, e.TransfersIn
+   	, e.TransfersInEvent
+   	, e.TransfersOut
+   	, e.TransfersOutEvent
+   	, e.ValueForm
+   	, e.ValueSeason
+   	, e.WebName
+   	, e.Minutes
+   	, e.GoalsScored
+   	, e.Assists
+   	, e.CleanSheets
+   	, e.GoalsConceded
+   	, e.OwnGoals
+   	, e.PenaltiesSaved
+   	, e.PenaltiesMissed
+   	, e.YellowCards
+   	, e.RedCards
+   	, e.Saves
+   	, e.Bonus
+   	, e.Bps
+   	, e.Influence
+   	, e.Creativity
+   	, e.IctIndex
+   	, e.TeamName
+	FROM ELEMENTS e
+	WHERE e.Id = playerId;
+
+END; //
+
+DELIMITER ;

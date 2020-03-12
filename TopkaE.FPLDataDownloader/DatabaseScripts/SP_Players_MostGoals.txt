@@ -1,0 +1,36 @@
+﻿DELIMITER //
+
+CREATE OR REPLACE PROCEDURE SP_Players_MostGoals(IN Top INT)
+
+BEGIN
+
+	IF Top IS NULL THEN 
+	
+	SELECT 
+		e.Id
+		, e.FirstName
+		, e.SecondName
+		, e.TeamName
+		, e.GoalsScored
+		, e.Assists
+	FROM ELEMENTS e
+	ORDER BY e.GoalsScored DESC;
+	
+	ELSE
+	
+	SELECT 
+		e.Id
+		, e.FirstName
+		, e.SecondName
+		, e.TeamName
+		, e.GoalsScored
+		, e.Assists
+	FROM ELEMENTS e
+	ORDER BY e.GoalsScored DESC
+	LIMIT Top;
+	
+	END IF; 
+
+END; //
+
+DELIMITER ;
