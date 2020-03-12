@@ -95,7 +95,7 @@ namespace TopkaE.FPLDataDownloader.Models.InputModels
 
         [JsonProperty(PropertyName = "team")]
         [Column(TypeName = "VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
-        public int Team { get; set; }
+        public string Team { get; set; }
 
         [JsonProperty(PropertyName = "team_code")]
         public int TeamCode { get; set; }

@@ -35,11 +35,8 @@ namespace TopkaE.FPLDataDownloader.Controllers
             _context = context;
             _csvConv = new CSVConverter();
             _mapper = mapper;
-        }
+        }     
 
-        
-
-        // GET: api/Players
         [HttpGet]
         [Route("")]
         [Route("Get")]
@@ -58,8 +55,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
         [Route("GetPlayer")]
         public async Task<ActionResult<Element>> GetPlayer(int id)
         {
-            //GetById()
-            var player = await Task.Run(() => _repository.GetById(id));
+            Element player = await Task.Run(() => _repository.GetById(id));
 
             if (player == null)
             {
@@ -68,7 +64,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
             bool isCSV = this.isCSV(this.HttpContext.Request.Headers);
             if (isCSV)
             {
-                return File(Encoding.UTF8.GetBytes(_csvConv.ConvertToCSV(player)), "text/csv", "allplayers.csv");
+                return File(Encoding.UTF8.GetBytes(_csvConv.ConvertToCSV(player)), "text/csv", "player.csv");
             }
             return _serializer.Serialize(player, this);
         }
@@ -77,53 +73,39 @@ namespace TopkaE.FPLDataDownloader.Controllers
         [Route("MostTransferedIn")]
         public async Task<ActionResult<IEnumerable<EventTransfers>>> GetMostTransferedIn(int? top)
         {
-            //GetMostTransferedIn()
-            List<Element> players = await _context.Elements.ToListAsync();
-            
-            if (top != null || top != 0)
+            List<EventTransfers> players = await Task.Run(() => _repository.GetMostTransferedIn(top).ToList());
+            bool isCSV = this.isCSV(this.HttpContext.Request.Headers);
+            if (isCSV)
             {
-                players = players.OrderByDescending(p => p.TransfersInEvent).Take(top.GetValueOrDefault()).ToList();
+                return File(Encoding.UTF8.GetBytes(_csvConv.ConvertToCSV(players)), "text/csv", "MostTransferedIn.csv");
             }
-            else
-            {
-                players = players.OrderByDescending(p => p.TransfersInEvent).ToList();
-            }
-            List<EventTransfers> results = _mapper.Map<List<EventTransfers>>(players);
-            return _serializer.Serialize(results, this);
+            return _serializer.Serialize(players, this);
         }
 
         [HttpGet]
         [Route("MostTransferedOut")]
-        public async Task<ActionResult<IEnumerable<Element>>> GetMostTransferedOut(int? top)
+        public async Task<ActionResult<IEnumerable<EventTransfers>>> GetMostTransferedOut(int? top)
         {
-            List<Element> players = await _context.Elements.ToListAsync();
-            if (top != null || top != 0)
+            List<EventTransfers> players = await Task.Run(() => _repository.GetMostTransferedOut(top).ToList());
+            bool isCSV = this.isCSV(this.HttpContext.Request.Headers);
+            if (isCSV)
             {
-                players = players.OrderByDescending(p => p.TransfersOutEvent).Take(top.GetValueOrDefault()).ToList();
+                return File(Encoding.UTF8.GetBytes(_csvConv.ConvertToCSV(players)), "text/csv", "MostTransferedOut.csv");
             }
-            else
-            {
-                players = players.OrderByDescending(p => p.TransfersOutEvent).ToList();
-            }
-            List<EventTransfers> results = _mapper.Map<List<EventTransfers>>(players);
-            return _serializer.Serialize(results, this);
+            return _serializer.Serialize(players, this);
         }
 
         [HttpGet]
         [Route("MostGoals")]
-        public async Task<ActionResult<IEnumerable<Element>>> GetMostGoals(int? top)
+        public async Task<ActionResult<IEnumerable<MostGoals>>> GetMostGoals(int? top)
         {
-            List<Element> players = await _context.Elements.ToListAsync();
-            if (top != null && top != 0)
+            List<MostGoals> players = await Task.Run(() => _repository.GetMostGoals(top).ToList());
+            bool isCSV = this.isCSV(this.HttpContext.Request.Headers);
+            if (isCSV)
             {
-                players = players.OrderByDescending(p => p.GoalsScored).Take(top.GetValueOrDefault()).ToList();
+                return File(Encoding.UTF8.GetBytes(_csvConv.ConvertToCSV(players)), "text/csv", "MostGoals.csv");
             }
-            else
-            {
-                players = players.OrderByDescending(p => p.GoalsScored).ToList();
-            }
-            List<MostGoals> results = _mapper.Map<List<MostGoals>>(players);
-            return _serializer.Serialize(results, this);
+            return _serializer.Serialize(players, this);
         }
 
         [HttpGet]

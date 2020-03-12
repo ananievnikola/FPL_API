@@ -41,10 +41,10 @@ namespace TopkaE.FPLDataDownloader
             {
                 mc.AddProfile(new OutputModelsProfile());
             });
-
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
-            services.AddScoped<IPlayerRepository, EFPlayerRepository>();
+            //services.AddScoped<IPlayerRepository, EFPlayerRepository>();
+            services.AddScoped<IPlayerRepository, MariaDBPlayerRepository>();
             services.AddHttpClient();
         }
 

@@ -36,7 +36,17 @@ namespace TopkaE.FPLDataDownloader.Repository
             return player;
         }
 
-        public IEnumerable<EventTransfers> GetMostTransferedIn()
+        public IEnumerable<MostGoals> GetMostGoals(int? top)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<EventTransfers> GetMostTransferedIn(int? top)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<EventTransfers> GetMostTransferedOut(int? top)
         {
             throw new NotImplementedException();
         }

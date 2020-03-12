@@ -1,18 +1,20 @@
 ﻿- Migrate to MariaDB
 	* Fix the update method
-	* Develop custom attributes to wrap the current attibutes in one (optional)
+	* Remove EF and use the database without ORM.
+	* Remove AutoMapper if it is not needed after the EF removal
+	* Develop custom attributes to wrap the current attibutes in one (optional) - This will be removed since EF is about to be removed as well. Clean models will do the job.
 
 - Add [JsonProperty(PropertyName = "xxx")] to all input models
 
-- Review all object type props in the models 
+- Review all object type props in the models and the database. Recreate the database with the correct data types (int32 is overkill for most of the fields as they can be
+stored even in byte datatype)
 
 - Add some kind of auth for updating the data
 
-- Add loger
-
-- DI mechanism for the controllers
+- Add logger
 
 --- parallelism in updater -> needs more work
 
 - Paging of the results
 
+- Test the csv header
