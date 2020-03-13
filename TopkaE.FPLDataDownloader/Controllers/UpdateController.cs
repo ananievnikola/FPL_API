@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
         private HttpClient _client;
         private readonly RequesterFactory _requesterFactory;
 
-        public UpdateController(TopkaEContext context, IHttpClientFactory clientFactory)
+        public UpdateController(TopkaEContext context, IHttpClientFactory clientFactory, IConfiguration config)
         {
             _client = clientFactory.CreateClient();
             _requesterFactory = new RequesterFactory();
@@ -39,13 +40,83 @@ namespace TopkaE.FPLDataDownloader.Controllers
         [Route("UpdateAll")]
         public async Task<bool> UpdateAll()
         {
-            bool result = false;
+            bool result = await UpdatePlayersNew();
 
-            Dictionary<string, bool> aggregateResults = new Dictionary<string, bool>();
-            bool playersResult = await UpdatePlayers();
-            aggregateResults.Add("players", playersResult);
-            result = !aggregateResults.ContainsValue(false);
+            //Dictionary<string, bool> aggregateResults = new Dictionary<string, bool>();
+            //bool playersResult = await UpdatePlayers();
+            //aggregateResults.Add("players", playersResult);
+            //result = !aggregateResults.ContainsValue(false);
 
+            return result;
+        }
+
+        private async Task<bool> UpdatePlayersNew()
+        {
+            bool result = true;
+            string resp = await _playerRequester.ExecuteRequest();
+            if (!string.IsNullOrEmpty(resp))
+            {
+                GeneralDataModelNew gdm = JsonConvert.DeserializeObject<GeneralDataModelNew>(resp);
+                //if (gdm == null || gdm.Players == null)
+                //{
+                //    //log ex
+                //    result = false;
+                //}
+                //else
+                //{
+                //    List<Element> players = gdm.Players;
+                //    List<int> ids = new List<int>();
+                //    if (players != null && players.Count > 0) //
+                //    {
+                //        List<Element> playersFromDB = await _context.Elements?.AsNoTracking()?.ToListAsync();
+                //        if (playersFromDB == null || playersFromDB.Count == 0)
+                //        {
+                //            DateTime time = DateTime.Now;
+                //            foreach (var player in players)
+                //            {
+                //                player.LastUpdated = time;
+                //                player.TeamName = PlayersUtilities.GetTeamName(player.TeamCode);
+                //            }
+                //            _context.AddRange(players);
+                //            List<HistoryAndFixtures> historyAndFixtures = await this.DownloadFixturesAndResults(players);
+                //            foreach (var fixOrRes in historyAndFixtures)
+                //            {
+                //                fixOrRes.Fixtures.ForEach(i => i.ElementId = fixOrRes.Id);
+                //                fixOrRes.History.ForEach(i => i.ElementId = fixOrRes.Id);
+                //                _context.AddRange(fixOrRes.Fixtures);
+                //                _context.AddRange(fixOrRes.History);
+                //            }
+                //            _context.SaveChanges();
+                //            result = true;
+                //        }
+                //        else if (playersFromDB != null)
+                //        {
+                //            foreach (var player in players)
+                //            {
+                //                player.LastUpdated = DateTime.Now;
+                //                player.TeamName = PlayersUtilities.GetTeamName(player.TeamCode);
+                //                Element currentDbPlayer = playersFromDB.FirstOrDefault(p => p.Id == player.Id);
+                //                if (currentDbPlayer != null)
+                //                {
+                //                    _context.Update(player);
+                //                }
+                //                else
+                //                {
+                //                    _context.Add(player);
+                //                }
+                //                _context.SaveChanges();
+                //                await this.DownloadFixturesAndResults(players);
+                //                result = true;
+                //            }
+                //        }
+                //        _context.SaveChanges();
+                //    }
+                //    else
+                //    {
+                //        result = false;
+                //    }
+                //}
+            }
             return result;
         }
 
