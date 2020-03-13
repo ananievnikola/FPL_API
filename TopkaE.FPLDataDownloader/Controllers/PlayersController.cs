@@ -103,81 +103,73 @@ namespace TopkaE.FPLDataDownloader.Controllers
             bool isCSV = this.isCSV(this.HttpContext.Request.Headers);
             if (isCSV)
             {
-                return File(Encoding.UTF8.GetBytes(_csvConv.ConvertToCSV(players)), "text/csv", "MostGoals.csv");
+                return File(Encoding.UTF8.GetBytes(_csvConv.ConvertToCSV(players)), "text/csv", "GetMostGoalsForTeam.csv");
             }
             return _serializer.Serialize(players, this);
         }
 
         [HttpGet]
         [Route("MostGoalsForTeam")]
-        public async Task<ActionResult<IEnumerable<Element>>> GetMostGoalsForTeam()
+        public async Task<ActionResult<IEnumerable<MostGoals>>> GetMostGoalsForTeam()
         {
-            List<Element> players = await _context.Elements.ToListAsync();
-            List<Element> mostGoalsPlayers = new List<Element>();
-            string[] allTeamNames = PlayersUtilities.GetAllTeamNames();
-            foreach (var teamName in allTeamNames)
+            List<MostGoals> players = await Task.Run(() => _repository.GetMostGoalsForTeam().ToList());
+            bool isCSV = this.isCSV(this.HttpContext.Request.Headers);
+            if (isCSV)
             {
-                var allTeamPlayers = players.Where(p => p.TeamName == teamName);
-                var maxScoredGoals = allTeamPlayers.Max(p => p.GoalsScored);
-                mostGoalsPlayers.AddRange(allTeamPlayers.Where(p => p.GoalsScored == maxScoredGoals));
+                return File(Encoding.UTF8.GetBytes(_csvConv.ConvertToCSV(players)), "text/csv", "GetMostGoalsForTeam.csv");
             }
-            List<MostGoals> results = _mapper.Map<List<MostGoals>>(mostGoalsPlayers);
-            return _serializer.Serialize(mostGoalsPlayers, this);
+            return _serializer.Serialize(players, this);
         }
 
         [HttpGet]
         [Route("MostGoalsInvolvement")]
-        public async Task<ActionResult<IEnumerable<Element>>> GetMostGoalsInvolvement()
+        public async Task<ActionResult<IEnumerable<MostGoals>>> GetMostGoalsInvolvement(int? top)
         {
-            List<Element> players = await _context.Elements.ToListAsync();
-            List<Element> mostGoalsPlayers = new List<Element>();
-            string[] allTeamNames = PlayersUtilities.GetAllTeamNames();
-            foreach (var teamName in allTeamNames)
+            List<MostGoals> players = await Task.Run(() => _repository.GetMostGoalsInvovement(top).ToList());
+            bool isCSV = this.isCSV(this.HttpContext.Request.Headers);
+            if (isCSV)
             {
-                var allTeamPlayers = players.Where(p => p.TeamName == teamName);
-                var maxGoalsAssists = allTeamPlayers.Max(p => p.GoalsScored + p.Assists);
-                mostGoalsPlayers.AddRange(allTeamPlayers.Where(p => p.GoalsScored + p.Assists == maxGoalsAssists));
+                return File(Encoding.UTF8.GetBytes(_csvConv.ConvertToCSV(players)), "text/csv", "GetMostGoalsForTeam.csv");
             }
-            List<MostGoals> results = _mapper.Map<List<MostGoals>>(mostGoalsPlayers);
-            return _serializer.Serialize(results, this);
+            return _serializer.Serialize(players, this);
         }
 
-        [HttpGet]
-        [Route("MostBPS")]
-        public async Task<ActionResult<IEnumerable<Element>>> GetMostBPS()
-        {
-            List<Element> players = await _context.Elements.ToListAsync();
-            List<Element> mostGoalsPlayers = new List<Element>();
-            string[] allTeamNames = PlayersUtilities.GetAllTeamNames();
-            foreach (var teamName in allTeamNames)
-            {
-                var allTeamPlayers = players.Where(p => p.TeamName == teamName);
-                var maxGoalsAssists = allTeamPlayers.Max(p => p.GoalsScored + p.Assists);
-                mostGoalsPlayers.AddRange(allTeamPlayers.Where(p => p.GoalsScored + p.Assists == maxGoalsAssists));
-            }
-            List<MostGoals> results = _mapper.Map<List<MostGoals>>(mostGoalsPlayers);
-            return _serializer.Serialize(results, this);
-        }
+        //[HttpGet]
+        //[Route("MostBPS")]
+        //public async Task<ActionResult<IEnumerable<Element>>> GetMostBPS()
+        //{
+        //    List<Element> players = await _context.Elements.ToListAsync();
+        //    List<Element> mostGoalsPlayers = new List<Element>();
+        //    string[] allTeamNames = PlayersUtilities.GetAllTeamNames();
+        //    foreach (var teamName in allTeamNames)
+        //    {
+        //        var allTeamPlayers = players.Where(p => p.TeamName == teamName);
+        //        var maxGoalsAssists = allTeamPlayers.Max(p => p.GoalsScored + p.Assists);
+        //        mostGoalsPlayers.AddRange(allTeamPlayers.Where(p => p.GoalsScored + p.Assists == maxGoalsAssists));
+        //    }
+        //    List<MostGoals> results = _mapper.Map<List<MostGoals>>(mostGoalsPlayers);
+        //    return _serializer.Serialize(results, this);
+        //}
 
-        [HttpGet]
-        [Route("PlayerBPS")]
-        public async Task<ActionResult<IEnumerable<Element>>> GetPlayerBPS(int id)
-        {
-            //optimize
-            Element player = await GetPlayerIncludeFixturesAndHistory(id);
-            PlayerBPSHistory results = _mapper.Map<PlayerBPSHistory>(player);
-            List<BPSModel> BPSModel = _mapper.Map<List<BPSModel>>(results.Histories);
-            results.Histories = results.Histories.OrderBy(h => h.Round).ToList();
-            return _serializer.Serialize(results, this);
-        }
+        //[HttpGet]
+        //[Route("PlayerBPS")]
+        //public async Task<ActionResult<IEnumerable<Element>>> GetPlayerBPS(int id)
+        //{
+        //    //optimize
+        //    Element player = await GetPlayerIncludeFixturesAndHistory(id);
+        //    PlayerBPSHistory results = _mapper.Map<PlayerBPSHistory>(player);
+        //    List<BPSModel> BPSModel = _mapper.Map<List<BPSModel>>(results.Histories);
+        //    results.Histories = results.Histories.OrderBy(h => h.Round).ToList();
+        //    return _serializer.Serialize(results, this);
+        //}
 
-        private async Task<Element> GetPlayerIncludeFixturesAndHistory(int id)
-        {
-            return await _context.Elements
-                .Include(h => h.Histories)
-                .Include(f => f.Fixtures)
-                .FirstOrDefaultAsync(p => p.Id == id);
-        }
+        //private async Task<Element> GetPlayerIncludeFixturesAndHistory(int id)
+        //{
+        //    return await _context.Elements
+        //        .Include(h => h.Histories)
+        //        .Include(f => f.Fixtures)
+        //        .FirstOrDefaultAsync(p => p.Id == id);
+        //}
 
         private bool isCSV(IHeaderDictionary headers)
         {
@@ -187,9 +179,9 @@ namespace TopkaE.FPLDataDownloader.Controllers
         }
 
 
-        private bool ElementExists(int id)
-        {
-            return _context.Elements.Any(e => e.Id == id);
-        }
+        //private bool ElementExists(int id)
+        //{
+        //    return _context.Elements.Any(e => e.Id == id);
+        //}
     }
 }

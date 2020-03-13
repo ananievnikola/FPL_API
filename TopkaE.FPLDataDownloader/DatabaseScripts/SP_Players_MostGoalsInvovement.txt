@@ -1,0 +1,53 @@
+﻿DELIMITER //
+
+CREATE OR REPLACE PROCEDURE SP_Players_MostGoalsInvovement(IN Top INT)
+
+BEGIN
+
+IF Top IS NULL THEN 
+	
+	SELECT 
+		e.Id
+		, e.FirstName
+		, e.SecondName
+		, e.TeamName
+		, e.GoalsScored
+		, e.Assists
+		, CAST(SUM(e.GoalsScored + e.Assists) AS INT) AS Overall
+	FROM ELEMENTS e
+	GROUP BY 
+		e.Id
+		, e.FirstName
+		, e.SecondName
+		, e.TeamName
+		, e.GoalsScored
+		, e.Assists
+	ORDER BY Overall DESC, e.GoalsScored DESC, e.Assists DESC;
+	
+ELSE
+	
+	SELECT 
+		e.Id
+		, e.FirstName
+		, e.SecondName
+		, e.TeamName
+		, e.GoalsScored
+		, e.Assists
+		, CAST(SUM(e.GoalsScored + e.Assists) AS INT) AS Overall
+	FROM ELEMENTS e
+	GROUP BY 
+		e.Id
+		, e.FirstName
+		, e.SecondName
+		, e.TeamName
+		, e.GoalsScored
+		, e.Assists
+	ORDER BY Overall DESC, e.GoalsScored DESC, e.Assists DESC
+	LIMIT Top;
+	
+	END IF; 
+	
+
+END; //
+
+DELIMITER ;

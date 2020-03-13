@@ -17,5 +17,10 @@ namespace TopkaE.FPLDataDownloader.Extensions
         {
             return Convert.IsDBNull(reader[name]) ? null : (DateTime?)reader[name];
         }
+
+        public static long? SaveReadInt64(this MySqlDataReader reader, string name)
+        {
+            return Convert.IsDBNull(reader[name]) ? null : (long?)reader[name];
+        }
     }
 }

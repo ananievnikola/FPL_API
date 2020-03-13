@@ -1,0 +1,25 @@
+﻿DELIMITER //
+
+CREATE OR REPLACE PROCEDURE SP_Players_MostGoalsForTeam()
+
+BEGIN
+
+	SELECT 
+	e2.Id 
+	, e2.FirstName
+	, e2.SecondName
+	, e2.TeamName
+	, e2.Assists
+	, e1.GoalsScored
+	FROM 
+		(SELECT 
+			e.TeamName
+			, MAX(e.GoalsScored) AS GoalsScored
+		FROM ELEMENTS e
+		GROUP BY e.TeamName) AS e1
+	INNER JOIN ELEMENTS e2 ON e1.GoalsScored = e2.GoalsScored AND e1.TeamName = e2.TeamName
+	ORDER BY e1.GoalsScored DESC, e1.TeamName;
+
+END; //
+
+DELIMITER ;

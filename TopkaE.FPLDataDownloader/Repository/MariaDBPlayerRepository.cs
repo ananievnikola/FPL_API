@@ -118,6 +118,45 @@ namespace TopkaE.FPLDataDownloader.Repository
             return players;
         }
 
+        public IEnumerable<MostGoals> GetMostGoalsForTeam()
+        {
+            List<MostGoals> players = new List<MostGoals>();
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SP_Players_MostGoalsForTeam", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        players.Add(this.MapMostGoals(reader));
+                    }
+                }
+            }
+            return players;
+        }
+
+        public IEnumerable<MostGoals> GetMostGoalsInvovement(int? top)
+        {
+            List<MostGoals> players = new List<MostGoals>();
+            using (MySqlConnection conn = new MySqlConnection(_connectionString))
+            {
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SP_Players_MostGoalsInvovement", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Top", top);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        players.Add(this.MapMostGoals(reader));
+                    }
+                }
+            }
+            return players;
+        }
+
         //If it is not too slow - refactor to use reflection instead
         private Element MapElement(MySqlDataReader reader)
         {
@@ -208,6 +247,15 @@ namespace TopkaE.FPLDataDownloader.Repository
             player.TeamName = reader.GetString("TeamName");
             player.GoalsScored = reader.GetInt32("GoalsScored");
             player.Assists = reader.GetInt32("Assists");
+            long? overall = reader.SaveReadInt64("Overall");
+            if (overall != null)
+            {
+                player.Overall = (int)overall;
+            }
+            else
+            {
+                player.Overall = null;
+            }
             return player;
         }
     }
