@@ -1,5 +1,7 @@
 ﻿DELIMITER //
 
+USE FPLDatabase;
+
 CREATE OR REPLACE PROCEDURE SP_Players_MostGoalsInvovement(IN Top INT)
 
 BEGIN
@@ -7,42 +9,42 @@ BEGIN
 IF Top IS NULL THEN 
 	
 	SELECT 
-		e.Id
-		, e.FirstName
-		, e.SecondName
-		, e.TeamName
-		, e.GoalsScored
-		, e.Assists
-		, CAST(SUM(e.GoalsScored + e.Assists) AS INT) AS Overall
-	FROM ELEMENTS e
+		p.Id
+		, p.FirstName
+		, p.SecondName
+		, p.TeamName
+		, p.GoalsScored
+		, p.Assists
+		, CAST(SUM(p.GoalsScored + p.Assists) AS INT) AS Overall
+	FROM PLAYERS p
 	GROUP BY 
-		e.Id
-		, e.FirstName
-		, e.SecondName
-		, e.TeamName
-		, e.GoalsScored
-		, e.Assists
-	ORDER BY Overall DESC, e.GoalsScored DESC, e.Assists DESC;
+		p.Id
+		, p.FirstName
+		, p.SecondName
+		, p.TeamName
+		, p.GoalsScored
+		, p.Assists
+	ORDER BY Overall DESC, p.GoalsScored DESC, p.Assists DESC;
 	
 ELSE
 	
 	SELECT 
-		e.Id
-		, e.FirstName
-		, e.SecondName
-		, e.TeamName
-		, e.GoalsScored
-		, e.Assists
-		, CAST(SUM(e.GoalsScored + e.Assists) AS INT) AS Overall
-	FROM ELEMENTS e
+		p.Id
+		, p.FirstName
+		, p.SecondName
+		, p.TeamName
+		, p.GoalsScored
+		, p.Assists
+		, CAST(SUM(p.GoalsScored + p.Assists) AS INT) AS Overall
+	FROM PLAYERS p
 	GROUP BY 
-		e.Id
-		, e.FirstName
-		, e.SecondName
-		, e.TeamName
-		, e.GoalsScored
-		, e.Assists
-	ORDER BY Overall DESC, e.GoalsScored DESC, e.Assists DESC
+		p.Id
+		, p.FirstName
+		, p.SecondName
+		, p.TeamName
+		, p.GoalsScored
+		, p.Assists
+	ORDER BY Overall DESC, p.GoalsScored DESC, p.Assists DESC
 	LIMIT Top;
 	
 	END IF; 

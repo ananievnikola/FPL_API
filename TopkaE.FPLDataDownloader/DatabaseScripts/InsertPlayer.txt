@@ -1,0 +1,173 @@
+﻿DELIMITER //
+
+USE FPLDatabase;
+
+CREATE OR REPLACE PROCEDURE SP_Players_Insert(
+    IN ChanceOfPlayingNextRound TINYINT
+	 , IN ChanceOfPlayingThisRound TINYINT
+    , IN `Code` INT
+    , IN CostChangeEvent TINYINT
+    , IN CostChangeEventFall TINYINT
+    , IN CostChangeStart TINYINT
+    , IN CostChangeStartFall TINYINT
+    , IN DreamteamCount TINYINT
+    , IN ElementType TINYINT
+    , IN EpNext DECIMAL
+    , IN EpThis DECIMAL
+    , IN EventPoints TINYINT
+    , IN FirstName VARCHAR(100)
+    , IN Form DECIMAL
+    , IN InDreamteam TINYINT
+    , IN News VARCHAR(256)
+    , IN NewsAdded DATETIME
+    , IN NowCost DECIMAL
+    , IN Photo VARCHAR(100)
+    , IN PointsPerGame DECIMAL
+    , IN SecondName VARCHAR(100)
+    , IN SelectedByPercent DECIMAL
+    , IN Special TINYINT
+    , IN `Status` VARCHAR(1)
+    , IN Team TINYINT
+    , IN TeamCode TINYINT
+    , IN TotalPoints SMALLINT
+    , IN TransfersIn INT
+    , IN TransfersInEvent INT
+    , IN TransfersOut INT
+    , IN TransfersOutEvent INT
+    , IN ValueForm DECIMAL
+    , IN ValueSeason DECIMAL
+    , IN WebName VARCHAR(100)
+    , IN Minutes SMALLINT
+    , IN GoalsScored TINYINT
+    , IN Assists TINYINT
+    , IN CleanSheets TINYINT
+    , IN GoalsConceded TINYINT
+    , IN OwnGoals TINYINT
+    , IN PenaltiesSaved TINYINT
+    , IN PenaltiesMissed TINYINT
+    , IN YellowCards TINYINT
+    , IN RedCards TINYINT
+    , IN Saves TINYINT
+    , IN Bonus TINYINT
+    , IN Bps TINYINT
+    , IN Influence DECIMAL
+    , IN Creativity DECIMAL
+    , IN Threat DECIMAL
+    , IN IctIndex DECIMAL
+    , IN LastUpdated DATETIME
+    , IN TeamName VARCHAR(20)
+)
+
+BEGIN
+
+   INSERT INTO PLAYERS ( ChanceOfPlayingNextRound
+    , ChanceOfPlayingThisRound
+    , Code
+    , CostChangeEvent
+    , CostChangeEventFall
+    , CostChangeStart
+    , CostChangeStartFall
+    , DreamteamCount
+    , ElementType
+    , EpNext
+    , EpThis
+    , EventPoints
+    , FirstName
+    , Form
+    , InDreamteam
+    , News
+    , NewsAdded
+    , NowCost
+    , Photo
+    , PointsPerGame
+    , SecondName
+    , SelectedByPercent
+    , Special
+    , Status
+    , Team
+    , TeamCode
+    , TotalPoints
+    , TransfersIn
+    , TransfersInEvent
+    , TransfersOut
+    , TransfersOutEvent
+    , ValueForm
+    , ValueSeason
+    , WebName
+    , Minutes
+    , GoalsScored
+    , Assists
+    , CleanSheets
+    , GoalsConceded
+    , OwnGoals
+    , PenaltiesSaved
+    , PenaltiesMissed
+    , YellowCards
+    , RedCards
+    , Saves
+    , Bonus
+    , Bps
+    , Influence
+    , Creativity
+    , Threat
+    , IctIndex
+    , LastUpdated
+    , TeamName) 
+    VALUES ( @ChanceOfPlayingNextRound
+    , @ChanceOfPlayingThisRound
+    , @Code
+    , @CostChangeEvent
+    , @CostChangeEventFall
+    , @CostChangeStart
+    , @CostChangeStartFall
+    , @DreamteamCount
+    , @ElementType
+    , @EpNext
+    , @EpThis
+    , @EventPoints
+    , @FirstName
+    , @Form
+    , @InDreamteam
+    , @News
+    , @NewsAdded
+    , @NowCost
+    , @Photo
+    , @PointsPerGame
+    , @SecondName
+    , @SelectedByPercent
+    , @Special
+    , @Status
+    , @Team
+    , @TeamCode
+    , @TotalPoints
+    , @TransfersIn
+    , @TransfersInEvent
+    , @TransfersOut
+    , @TransfersOutEvent
+    , @ValueForm
+    , @ValueSeason
+    , @WebName
+    , @Minutes
+    , @GoalsScored
+    , @Assists
+    , @CleanSheets
+    , @GoalsConceded
+    , @OwnGoals
+    , @PenaltiesSaved
+    , @PenaltiesMissed
+    , @YellowCards
+    , @RedCards
+    , @Saves
+    , @Bonus
+    , @Bps
+    , @Influence
+    , @Creativity
+    , @Threat
+    , @IctIndex
+    , @LastUpdated
+    , @TeamName
+    );
+
+END; //
+
+DELIMITER ;

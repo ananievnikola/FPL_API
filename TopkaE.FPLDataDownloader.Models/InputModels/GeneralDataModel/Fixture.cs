@@ -1,13 +1,13 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+//using System.ComponentModel.DataAnnotations;
+//using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TopkaE.FPLDataDownloader.Models.InputModels
 {
     public class Fixture
     {
-        [Key]
+        //[Key]
         public int Id { get; set; }
 
         public int ElementId { get; set; }
@@ -42,7 +42,7 @@ namespace TopkaE.FPLDataDownloader.Models.InputModels
         [JsonProperty(PropertyName = "kickoff_time")]
         public DateTime? KickoffTime { get; set; }
 
-        [Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
+        //[Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
         [JsonProperty(PropertyName = "event_name")]
         public string EventName { get; set; }
 

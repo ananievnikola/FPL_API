@@ -75,7 +75,7 @@
 
         }
 
-        public static string[] GetAllTeamNames ()
+        public static string[] GetAllTeamNames()
         {
             return new string[]
             {
@@ -100,6 +100,68 @@
                 "West Ham",
                 "Wolverhampton"
             };
+        }
+
+        public static string[] GetAllPlayerDBFields()
+        {
+            return new string[]
+            {
+                 "ChanceOfPlayingNextRound"
+                , "ChanceOfPlayingThisRound"
+                , "Code"
+                , "CostChangeEvent"
+                , "CostChangeEventFall"
+                , "CostChangeStart"
+                , "CostChangeStartFall"
+                , "DreamteamCount"
+                , "ElementType"
+                , "EpNext"
+                , "EpThis"
+                , "EventPoints"
+                , "FirstName"
+                , "Form"
+                , "InDreamteam"
+                , "News"
+                , "NewsAdded"
+                , "NowCost"
+                , "Photo"
+                , "PointsPerGame"
+                , "SecondName"
+                , "SelectedByPercent"
+                , "Special"
+                , "Status"
+                , "Team"
+                , "TeamCode"
+                , "TotalPoints"
+                , "TransfersIn"
+                , "TransfersInEvent"
+                , "TransfersOut"
+                , "TransfersOutEvent"
+                , "ValueForm"
+                , "ValueSeason"
+                , "WebName"
+                , "Minutes"
+                , "GoalsScored"
+                , "Assists"
+                , "CleanSheets"
+                , "GoalsConceded"
+                , "OwnGoals"
+                , "PenaltiesSaved"
+                , "PenaltiesMissed"
+                , "YellowCards"
+                , "RedCards"
+                , "Saves"
+                , "Bonus"
+                , "Bps"
+                , "Influence"
+                , "Creativity"
+                , "Threat"
+                , "IctIndex"
+                , "LastUpdated"
+                , "TeamName"
+            };
+
+            ;
         }
     }
 }

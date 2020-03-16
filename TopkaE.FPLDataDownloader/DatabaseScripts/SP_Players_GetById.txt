@@ -1,64 +1,66 @@
 ﻿DELIMITER //
 
+USE FPLDatabase;
+
 CREATE OR REPLACE PROCEDURE SP_Players_GetById(IN PlayerId INT)
 
 BEGIN
 
 	SELECT 
-   	e.ChanceOfPlayingNextRound
-   	, e.ChanceOfPlayingThisRound
-   	, e.`Code`
-   	, e.CostChangeEvent
-   	, e.CostChangeEventFall
-   	, e.CostChangeStart
-   	, e.CostChangeStartFall
-   	, e.DreamteamCount
-   	, e.ElementType
-   	, e.EpNext
-   	, e.EpThis
-   	, e.EventPoints
-	, e.FirstName
-   	, e.Form
-   	, e.Id
-   	, e.InDreamteam
-   	, e.News
-   	, e.NewsAdded
-   	, e.NowCost
-   	, e.Photo
-   	, e.PointsPerGame
-   	, e.SecondName
-   	, e.SelectedByPercent
-   	, e.Special
-   	, e.`Status`
-   	, e.Team
-   	, e.TeamCode
-   	, e.TotalPoints
-   	, e.TransfersIn
-   	, e.TransfersInEvent
-   	, e.TransfersOut
-   	, e.TransfersOutEvent
-   	, e.ValueForm
-   	, e.ValueSeason
-   	, e.WebName
-   	, e.Minutes
-   	, e.GoalsScored
-   	, e.Assists
-   	, e.CleanSheets
-   	, e.GoalsConceded
-   	, e.OwnGoals
-   	, e.PenaltiesSaved
-   	, e.PenaltiesMissed
-   	, e.YellowCards
-   	, e.RedCards
-   	, e.Saves
-   	, e.Bonus
-   	, e.Bps
-   	, e.Influence
-   	, e.Creativity
-   	, e.IctIndex
-   	, e.TeamName
-	FROM ELEMENTS e
-	WHERE e.Id = playerId;
+   	p.ChanceOfPlayingNextRound
+   	, p.ChanceOfPlayingThisRound
+   	, p.`Code`
+   	, p.CostChangeEvent
+   	, p.CostChangeEventFall
+   	, p.CostChangeStart
+   	, p.CostChangeStartFall
+   	, p.DreamteamCount
+   	, p.ElementType
+   	, p.EpNext
+   	, p.EpThis
+   	, p.EventPoints
+	, p.FirstName
+   	, p.Form
+   	, p.Id
+   	, p.InDreamteam
+   	, p.News
+   	, p.NewsAdded
+   	, p.NowCost
+   	, p.Photo
+   	, p.PointsPerGame
+   	, p.SecondName
+   	, p.SelectedByPercent
+   	, p.Special
+   	, p.`Status`
+   	, p.Team
+   	, p.TeamCode
+   	, p.TotalPoints
+   	, p.TransfersIn
+   	, p.TransfersInEvent
+   	, p.TransfersOut
+   	, p.TransfersOutEvent
+   	, p.ValueForm
+   	, p.ValueSeason
+   	, p.WebName
+   	, p.Minutes
+   	, p.GoalsScored
+   	, p.Assists
+   	, p.CleanSheets
+   	, p.GoalsConceded
+   	, p.OwnGoals
+   	, p.PenaltiesSaved
+   	, p.PenaltiesMissed
+   	, p.YellowCards
+   	, p.RedCards
+   	, p.Saves
+   	, p.Bonus
+   	, p.Bps
+   	, p.Influence
+   	, p.Creativity
+   	, p.IctIndex
+   	, p.TeamName
+	FROM PLAYERS p
+	WHERE p.Id = playerId;
 
 END; //
 

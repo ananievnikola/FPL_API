@@ -1,5 +1,7 @@
 ﻿DELIMITER //
 
+USE FPLDatabase;
+
 CREATE OR REPLACE PROCEDURE SP_Players_MostGoals(IN Top INT)
 
 BEGIN
@@ -7,26 +9,26 @@ BEGIN
 	IF Top IS NULL THEN 
 	
 	SELECT 
-		e.Id
-		, e.FirstName
-		, e.SecondName
-		, e.TeamName
-		, e.GoalsScored
-		, e.Assists
-	FROM ELEMENTS e
-	ORDER BY e.GoalsScored DESC;
+		p.Id
+		, p.FirstName
+		, p.SecondName
+		, p.TeamName
+		, p.GoalsScored
+		, p.Assists
+	FROM PLAYERS p
+	ORDER BY p.GoalsScored DESC;
 	
 	ELSE
 	
 	SELECT 
-		e.Id
-		, e.FirstName
-		, e.SecondName
-		, e.TeamName
-		, e.GoalsScored
-		, e.Assists
-	FROM ELEMENTS e
-	ORDER BY e.GoalsScored DESC
+		p.Id
+		, p.FirstName
+		, p.SecondName
+		, p.TeamName
+		, p.GoalsScored
+		, p.Assists
+	FROM PLAYERS p
+	ORDER BY p.GoalsScored DESC
 	LIMIT Top;
 	
 	END IF; 

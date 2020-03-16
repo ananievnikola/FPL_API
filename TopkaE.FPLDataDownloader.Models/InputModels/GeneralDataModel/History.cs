@@ -1,14 +1,14 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+//using System.ComponentModel.DataAnnotations;
+//using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TopkaE.FPLDataDownloader.Models.InputModels
 {
     public class History
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //[Key]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         public int ElementId { get; set; }
@@ -79,19 +79,19 @@ namespace TopkaE.FPLDataDownloader.Models.InputModels
         [JsonProperty(PropertyName = "bps")]
         public int BPS { get; set; }
 
-        [Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
+        //[Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
         [JsonProperty(PropertyName = "influence")]
         public string Influence { get; set; }
 
-        [Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
+        //[Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
         [JsonProperty(PropertyName = "Creativity")]
         public string Creativity { get; set; }
 
-        [Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
+        //[Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
         [JsonProperty(PropertyName = "threat")]
         public string Threat { get; set; }
 
-        [Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
+        //[Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
         [JsonProperty(PropertyName = "ict_index")]
         public string ICTndex { get; set; }
         [JsonProperty(PropertyName = "value")]

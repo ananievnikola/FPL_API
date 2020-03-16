@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+//using System.ComponentModel.DataAnnotations.Schema;
 //using MySql.Data.EntityFrameworkCore.DataAnnotations;
 
 namespace TopkaE.FPLDataDownloader.Models.InputModels
@@ -38,29 +38,29 @@ namespace TopkaE.FPLDataDownloader.Models.InputModels
         [JsonProperty(PropertyName = "element_type")]
         public int ElementType { get; set; }
 
-        [Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
+        //[Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
         [JsonProperty(PropertyName = "ep_next")]
         public string EpNext { get; set; }
 
-        [Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
+        //[Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
         [JsonProperty(PropertyName = "ep_this")]       
         public string EpThis { get; set; }
 
         [JsonProperty(PropertyName = "event_points")]
         public int EventPoints { get; set; }
 
-        [Column(TypeName = "VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
+        //[Column(TypeName = "VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
         [JsonProperty(PropertyName = "first_name")]
         public string FirstName { get; set; }
 
-        [Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review datatype
+        //[Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review datatype
         [JsonProperty(PropertyName = "form")]
         public string Form { get; set; }
 
         [JsonProperty(PropertyName = "in_dreamteam")]
         public bool InDreamteam { get; set; }
 
-        [Column(TypeName = "VARCHAR(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
+        //[Column(TypeName = "VARCHAR(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
         [JsonProperty(PropertyName = "news")]
         public string News { get; set; }
 
@@ -69,19 +69,19 @@ namespace TopkaE.FPLDataDownloader.Models.InputModels
         [JsonProperty(PropertyName = "now_cost")]
         public int NowCost { get; set; }
 
-        [Column(TypeName = "VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review size
+        //[Column(TypeName = "VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review size
         [JsonProperty(PropertyName = "photo")]
         public string Photo { get; set; }
 
-        [Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review datatype
+        //[Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review datatype
         [JsonProperty(PropertyName = "points_per_game")]
         public string PointsPerGame { get; set; }
 
-        [Column(TypeName = "VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
+        //[Column(TypeName = "VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
         [JsonProperty(PropertyName = "second_name")]
         public string SecondName { get; set; }
 
-        [Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review datatype
+        //[Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review datatype
         [JsonProperty(PropertyName = "selected_by_percent")]
         public string SelectedByPercent { get; set; }
 
@@ -89,12 +89,12 @@ namespace TopkaE.FPLDataDownloader.Models.InputModels
         public bool Special { get; set; }
 
         //public object squad_number { get; set; }
-        [Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
+        //[Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
         [JsonProperty(PropertyName = "status")]
         public string Status { get; set; }
 
         [JsonProperty(PropertyName = "team")]
-        [Column(TypeName = "VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
+        //[Column(TypeName = "VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
         public string Team { get; set; }
 
         [JsonProperty(PropertyName = "team_code")]
@@ -115,15 +115,15 @@ namespace TopkaE.FPLDataDownloader.Models.InputModels
         [JsonProperty(PropertyName = "transfers_out_event")]
         public int TransfersOutEvent { get; set; }
 
-        [Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review datatype
+        //[Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review datatype
         [JsonProperty(PropertyName = "value_form")]
         public string ValueForm { get; set; }
 
-        [Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review datatype
+        //[Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review datatype
         [JsonProperty(PropertyName = "value_season")]
         public string ValueSeason { get; set; }
 
-        [Column(TypeName = "VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
+        //[Column(TypeName = "VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]
         [JsonProperty(PropertyName = "web_name")]
         public string WebName { get; set; }
 
@@ -166,26 +166,26 @@ namespace TopkaE.FPLDataDownloader.Models.InputModels
         [JsonProperty(PropertyName = "bps")]
         public int Bps { get; set; }
 
-        [Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review datatype
+        //[Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review datatype
         [JsonProperty(PropertyName = "influence")]
         public string Influence { get; set; }
 
-        [Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review datatype
+        //[Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review datatype
         [JsonProperty(PropertyName = "creativity")]
         public string Creativity { get; set; }
 
-        [Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review datatype
+        //[Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review datatype
         [JsonProperty(PropertyName = "threat")]
         public string Threat { get; set; }
 
-        [Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review datatype
+        //[Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review datatype
         [JsonProperty(PropertyName = "ict_index")]
         public string IctIndex { get; set; }
 
         //Additional properties
         public DateTime? LastUpdated { get; set; }
 
-        [Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review datatype
+        //[Column(TypeName = "VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")]//review datatype
         public string TeamName { get; set; }
 
         //Navigation properties

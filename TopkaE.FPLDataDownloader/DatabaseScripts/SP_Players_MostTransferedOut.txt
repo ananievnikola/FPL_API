@@ -1,5 +1,7 @@
 ﻿DELIMITER //
 
+USE FPLDatabase;
+
 CREATE OR REPLACE PROCEDURE SP_Players_MostTransferedOut(IN Top INT)
 
 BEGIN
@@ -7,28 +9,28 @@ BEGIN
 	IF Top IS NULL THEN 
 	
 	SELECT 
-		e.Id
-		, e.FirstName
-		, e.SecondName
-		, e.TeamName
-		, e.TransfersInEvent
-		, e.TransfersOutEvent
-		, e.SelectedByPercent
-	FROM ELEMENTS e
-	ORDER BY e.TransfersOutEvent DESC;
+		p.Id
+		, p.FirstName
+		, p.SecondName
+		, p.TeamName
+		, p.TransfersInEvent
+		, p.TransfersOutEvent
+		, p.SelectedByPercent
+	FROM PLAYERS p
+	ORDER BY p.TransfersOutEvent DESC;
 	
 	ELSE
 	
 	SELECT 
-		e.Id
-		, e.FirstName
-		, e.SecondName
-		, e.TeamName
-		, e.TransfersInEvent
-		, e.TransfersOutEvent
-		, e.SelectedByPercent
-	FROM ELEMENTS e
-	ORDER BY e.TransfersOutEvent DESC
+		p.Id
+		, p.FirstName
+		, p.SecondName
+		, p.TeamName
+		, p.TransfersInEvent
+		, p.TransfersOutEvent
+		, p.SelectedByPercent
+	FROM PLAYERS p
+	ORDER BY p.TransfersOutEvent DESC
 	LIMIT Top;
 	
 	END IF; 
