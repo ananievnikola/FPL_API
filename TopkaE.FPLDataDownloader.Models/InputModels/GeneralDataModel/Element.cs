@@ -344,7 +344,7 @@ namespace TopkaE.FPLDataDownloader.Models.InputModels
         public short Bonus { get; set; }
 
         [JsonProperty(PropertyName = "bps")]
-        public short Bps { get; set; }
+        public int Bps { get; set; }
 
         [JsonProperty(PropertyName = "influence")]
         public float Influence { get; set; }

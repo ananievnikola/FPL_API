@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
@@ -73,51 +74,116 @@ namespace TopkaE.FPLDataDownloader.Controllers
                     //things to do before insert
                     //NowCost, last updated, team name
                     List<Player> players = gdm.Players;
-                    StringBuilder sCommand = new StringBuilder("INSERT INTO PLAYERS ( ChanceOfPlayingNextRound\r\n    , ChanceOfPlayingThisRound\r\n    , Code\r\n    , CostChangeEvent\r\n    , CostChangeEventFall\r\n    , CostChangeStart\r\n    , CostChangeStartFall\r\n    , DreamteamCount\r\n    , ElementType\r\n    , EpNext\r\n    , EpThis\r\n    , EventPoints\r\n    , FirstName\r\n    , Form\r\n    , InDreamteam\r\n    , News\r\n    , NewsAdded\r\n    , NowCost\r\n    , Photo\r\n    , PointsPerGame\r\n    , SecondName\r\n    , SelectedByPercent\r\n    , Special\r\n    , Status\r\n    , Team\r\n    , TeamCode\r\n    , TotalPoints\r\n    , TransfersIn\r\n    , TransfersInEvent\r\n    , TransfersOut\r\n    , TransfersOutEvent\r\n    , ValueForm\r\n    , ValueSeason\r\n    , WebName\r\n    , Minutes\r\n    , GoalsScored\r\n    , Assists\r\n    , CleanSheets\r\n    , GoalsConceded\r\n    , OwnGoals\r\n    , PenaltiesSaved\r\n    , PenaltiesMissed\r\n    , YellowCards\r\n    , RedCards\r\n    , Saves\r\n    , Bonus\r\n    , Bps\r\n    , Influence\r\n    , Creativity\r\n    , Threat\r\n    , IctIndex\r\n    , LastUpdated\r\n    , TeamName) ");
-
-                    string test = BuildInsertQuery(players);
-                    using (var mConnection = new MySqlConnection(_connectionString))
-                    {
-                        List<string> Rows = new List<string>();
-                        for (int i = 0; i < players.Count; i++)
-                        {
-                            Rows.Add(string.Format("('{0}','{1}')", MySqlHelper.EscapeString("test"), MySqlHelper.EscapeString("test")));
-                        }
-                        sCommand.Append(string.Join(",", Rows));
-                        sCommand.Append(";");
-                        mConnection.Open();
-                        using (MySqlCommand myCmd = new MySqlCommand(sCommand.ToString(), mConnection))
-                        {
-                            myCmd.CommandType = CommandType.Text;
-                            myCmd.ExecuteNonQuery();
-                        }
-                    }
+                    this.DeleteAllPlayers();
+                    this.InsertPlayers(players);
                 }
             }
             return result;
         }
 
-        private string BuildInsertQuery (List<Player> players)
+        private void DeleteAllPlayers()
         {
-            StringBuilder sbMain = new StringBuilder();
-            string[] playerDbFields = PlayersUtilities.GetAllPlayerDBFields();
-            foreach (var player in players)
+            try
             {
-                StringBuilder sb = new StringBuilder("INSERT INTO PLAYERS ( ");
-                sb.Append(string.Join(", ", playerDbFields));
-                sb.Append(" ) VALUES (");
-                for (int i = 0; i < playerDbFields.Length; i++)
+                using (MySqlConnection sqlConnection = new MySqlConnection(_connectionString))
                 {
-                    if (i == 2 )
-                    {
-                        break;
-                    }
-                    //sb.Append();
+                    sqlConnection.Open();
+                    MySqlCommand deleteCommand = new MySqlCommand("SP_Players_DeleteAll", sqlConnection);
+                    deleteCommand.CommandType = CommandType.StoredProcedure;
+                    MySqlTransaction deleteTransaction = sqlConnection.BeginTransaction();
+                    deleteCommand.Transaction = deleteTransaction;
+                    deleteCommand.ExecuteNonQuery();
+                    deleteTransaction.Commit();
                 }
-                sb.Append(" )");
             }
-            return sbMain.ToString();
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+                           
         }
+
+        private void InsertPlayers(List<Player> players)
+        {
+            try
+            {
+                using (MySqlConnection sqlConnection = new MySqlConnection(_connectionString))
+                {
+
+                    sqlConnection.Open();
+                    MySqlTransaction transaction = sqlConnection.BeginTransaction();
+                    foreach (Player player in players)
+                    {
+                        MySqlCommand sqlCommand = new MySqlCommand("SP_Players_Insert", sqlConnection);
+                        sqlCommand.CommandType = CommandType.StoredProcedure;
+                        sqlCommand.Parameters.AddWithValue("ChanceOfPlayingNextRound", player.ChanceOfPlayingNextRound);
+                        sqlCommand.Parameters.AddWithValue("ChanceOfPlayingThisRound", player.ChanceOfPlayingThisRound);
+                        sqlCommand.Parameters.AddWithValue("Code", player.Code);
+                        sqlCommand.Parameters.AddWithValue("CostChangeEvent", 1);
+                        sqlCommand.Parameters.AddWithValue("CostChangeEventFall", player.CostChangeEventFall);
+                        sqlCommand.Parameters.AddWithValue("CostChangeStart", player.CostChangeStart);
+                        sqlCommand.Parameters.AddWithValue("CostChangeStartFall", player.CostChangeStartFall);
+                        sqlCommand.Parameters.AddWithValue("DreamteamCount", player.DreamteamCount);
+                        sqlCommand.Parameters.AddWithValue("ElementType", player.ElementType);
+                        sqlCommand.Parameters.AddWithValue("EpNext", player.EpNext);
+                        sqlCommand.Parameters.AddWithValue("EpThis", player.EpThis);
+                        sqlCommand.Parameters.AddWithValue("EventPoints", player.EventPoints);
+                        sqlCommand.Parameters.AddWithValue("FirstName", player.FirstName);
+                        sqlCommand.Parameters.AddWithValue("Form", player.Form);
+                        sqlCommand.Parameters.AddWithValue("InDreamteam", player.InDreamteam);
+                        sqlCommand.Parameters.AddWithValue("News", player.News);
+                        sqlCommand.Parameters.AddWithValue("NewsAdded", player.NewsAdded);
+                        sqlCommand.Parameters.AddWithValue("NowCost", player.NowCost);
+                        sqlCommand.Parameters.AddWithValue("Photo", player.Photo);
+                        sqlCommand.Parameters.AddWithValue("PointsPerGame", player.PointsPerGame);
+                        sqlCommand.Parameters.AddWithValue("SecondName", player.SecondName);
+                        sqlCommand.Parameters.AddWithValue("SelectedByPercent", player.SelectedByPercent);
+                        sqlCommand.Parameters.AddWithValue("Special", player.Special);
+                        sqlCommand.Parameters.AddWithValue("Status", player.Status);
+                        sqlCommand.Parameters.AddWithValue("Team", player.Team);
+                        sqlCommand.Parameters.AddWithValue("TeamCode", player.TeamCode);
+                        sqlCommand.Parameters.AddWithValue("TotalPoints", player.TotalPoints);
+                        sqlCommand.Parameters.AddWithValue("TransfersIn", player.TransfersIn);
+                        sqlCommand.Parameters.AddWithValue("TransfersInEvent", player.TransfersInEvent);
+                        sqlCommand.Parameters.AddWithValue("TransfersOut", player.TransfersOut);
+                        sqlCommand.Parameters.AddWithValue("TransfersOutEvent", player.TransfersOutEvent);
+                        sqlCommand.Parameters.AddWithValue("ValueForm", player.ValueForm);
+                        sqlCommand.Parameters.AddWithValue("ValueSeason", player.ValueSeason);
+                        sqlCommand.Parameters.AddWithValue("WebName", player.WebName);
+                        sqlCommand.Parameters.AddWithValue("Minutes", player.Minutes);
+                        sqlCommand.Parameters.AddWithValue("GoalsScored", player.GoalsScored);
+                        sqlCommand.Parameters.AddWithValue("Assists", player.Assists);
+                        sqlCommand.Parameters.AddWithValue("CleanSheets", player.CleanSheets);
+                        sqlCommand.Parameters.AddWithValue("GoalsConceded", player.GoalsConceded);
+                        sqlCommand.Parameters.AddWithValue("OwnGoals", player.OwnGoals);
+                        sqlCommand.Parameters.AddWithValue("PenaltiesSaved", player.PenaltiesSaved);
+                        sqlCommand.Parameters.AddWithValue("PenaltiesMissed", player.PenaltiesMissed);
+                        sqlCommand.Parameters.AddWithValue("YellowCards", player.YellowCards);
+                        sqlCommand.Parameters.AddWithValue("RedCards", player.RedCards);
+                        sqlCommand.Parameters.AddWithValue("Saves", player.Saves);
+                        sqlCommand.Parameters.AddWithValue("Bonus", player.Bonus);
+                        sqlCommand.Parameters.AddWithValue("Bps", 0);
+                        sqlCommand.Parameters.AddWithValue("Influence", player.Influence);
+                        sqlCommand.Parameters.AddWithValue("Creativity", player.Creativity);
+                        sqlCommand.Parameters.AddWithValue("Threat", player.Threat);
+                        sqlCommand.Parameters.AddWithValue("IctIndex", player.IctIndex);
+                        sqlCommand.Parameters.AddWithValue("LastUpdated", player.LastUpdated);
+                        sqlCommand.Parameters.AddWithValue("TeamName", player.TeamName);
+                        sqlCommand.Transaction = transaction;
+                        sqlCommand.ExecuteNonQuery();
+                    }
+                    transaction.Commit();
+                }
+            }
+            catch (Exception)
+            {
+                //log ex
+                throw;
+            }
+
+        }
+
 
         private async Task<bool> UpdatePlayers()
         {
