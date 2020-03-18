@@ -4,11 +4,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TopkaE.FPLDataDownloader.DBContext;
 using TopkaE.FPLDataDownloader.Models.InputModels;
 using TopkaE.FPLDataDownloader.Models.OutputModels;
 using TopkaE.FPLDataDownloader.Repository;
@@ -16,33 +13,28 @@ using TopkaE.FPLDataDownloader.Utilities;
 
 namespace TopkaE.FPLDataDownloader.Controllers
 {
-    //TODO: CHECK FOR EMPTY TABLES BEFORE SELECTING!!!
     [Route("api/Players")]
     [ApiController]
     public class PlayersController : ControllerBase
-    {
-        private readonly TopkaEContext _context;       
+    {   
         private readonly OutputCamelCaseSerializer _serializer;
         private readonly CSVConverter _csvConv;
-        private readonly IMapper _mapper;
 
         private readonly IPlayerRepository _repository;
 
-        public PlayersController(TopkaEContext context, IHttpClientFactory clientFactory, IMapper mapper, IPlayerRepository repository)
+        public PlayersController(IHttpClientFactory clientFactory, IPlayerRepository repository)
         {
             _repository = repository;
             _serializer = new OutputCamelCaseSerializer();
-            _context = context;
             _csvConv = new CSVConverter();
-            _mapper = mapper;
         }     
 
         [HttpGet]
         [Route("")]
         [Route("Get")]
-        public async Task<ActionResult<IEnumerable<Element>>> GetPlayers(int? points, string team)
+        public async Task<ActionResult<IEnumerable<Player>>> GetPlayers(int? points)
         {
-            IEnumerable<Element> players = await Task.Run(() => _repository.GetAll(points, team));
+            IEnumerable<Player> players = await Task.Run(() => _repository.GetAll(points));
             bool isCSV = this.isCSV(this.HttpContext.Request.Headers);
             if (isCSV)
             {
@@ -53,9 +45,9 @@ namespace TopkaE.FPLDataDownloader.Controllers
 
         [HttpGet]
         [Route("GetPlayer")]
-        public async Task<ActionResult<Element>> GetPlayer(int id)
+        public async Task<ActionResult<Player>> GetPlayer(int id)
         {
-            Element player = await Task.Run(() => _repository.GetById(id));
+            Player player = await Task.Run(() => _repository.GetById(id));
 
             if (player == null)
             {
@@ -133,6 +125,8 @@ namespace TopkaE.FPLDataDownloader.Controllers
             }
             return _serializer.Serialize(players, this);
         }
+
+        //TODO: Minutes goals with and without.. search for goal time stats
 
         //[HttpGet]
         //[Route("MostBPS")]

@@ -1,0 +1,109 @@
+﻿DELIMITER //
+
+USE FPLDatabase;
+
+CREATE OR REPLACE PROCEDURE SP_History_InsertHistoryEntry(
+    IN PlayerId INT
+	, IN Fixture INT
+    , IN OpponentTeam TINYINT
+    , IN TotalPoints TINYINT
+    , IN WasHome TINYINT
+    , IN KickoffTime DATETIME
+    , IN TeamHScore TINYINT
+    , IN TeamAScore TINYINT
+    , IN Round TINYINT
+    , IN Minutes TINYINT
+    , IN GoalsScored TINYINT
+    , IN Assists TINYINT
+    , IN CleanSheets TINYINT
+    , IN GoalsConceded TINYINT
+    , IN OwnGoals TINYINT
+    , IN PenaltiesSaved TINYINT
+    , IN PenaltiesMissed TINYINT
+    , IN YellowCards TINYINT
+    , IN RedCards TINYINT
+    , IN Saves TINYINT
+    , IN Bonus TINYINT
+    , IN BPS TINYINT
+    , IN Influence DECIMAL
+    , IN Creativity DECIMAL
+    , IN Threat DECIMAL
+    , IN ICTndex DECIMAL
+    , IN Price DECIMAL
+    , IN TransfersBalance INT
+    , IN Selected INT
+    , IN TransfersIn INT
+    , IN TransfersOut INT
+)
+
+BEGIN
+
+   INSERT INTO HISTORY ( 
+   PlayerId
+	,Fixture
+    ,OpponentTeam
+    ,TotalPoints
+    ,WasHome
+    ,KickoffTime
+    ,TeamHScore
+    ,TeamAScore
+    ,Round
+    ,Minutes
+    ,GoalsScored
+    ,Assists
+    ,CleanSheets
+    ,GoalsConceded
+    ,OwnGoals
+    ,PenaltiesSaved
+    ,PenaltiesMissed
+    ,YellowCards
+    ,RedCards
+    ,Saves
+    ,Bonus
+    ,BPS
+    ,Influence
+    ,Creativity
+    ,Threat
+    ,ICTndex
+    ,Price
+    ,TransfersBalance
+    ,Selected
+    ,TransfersIn
+    ,TransfersOut) 
+    VALUES ( 
+	PlayerId
+	,Fixture
+    ,OpponentTeam
+    ,TotalPoints
+    ,WasHome
+    ,KickoffTime
+    ,TeamHScore
+    ,TeamAScore
+    ,Round
+    ,Minutes
+    ,GoalsScored
+    ,Assists
+    ,CleanSheets
+    ,GoalsConceded
+    ,OwnGoals
+    ,PenaltiesSaved
+    ,PenaltiesMissed
+    ,YellowCards
+    ,RedCards
+    ,Saves
+    ,Bonus
+    ,BPS
+    ,Influence
+    ,Creativity
+    ,Threat
+    ,ICTndex
+    ,Price
+    ,TransfersBalance
+    ,Selected
+    ,TransfersIn
+    ,TransfersOut
+    );
+
+END; //
+
+DELIMITER ;

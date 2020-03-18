@@ -65,3 +65,74 @@ COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB
 AUTO_INCREMENT = 1;
 ;
+
+>>>
+
+USE FPLDatabase;
+
+CREATE TABLE `HISTORY` (
+	`Id` INT(11) NOT NULL AUTO_INCREMENT,
+	`PlayerId` INT(11) NOT NULL,
+	`Fixture` INT(11) NOT NULL,
+	`OpponentTeam` TINYINT(3) NOT NULL,
+	`TotalPoints` TINYINT(3) NOT NULL,
+	`WasHome` TINYINT(3) NOT NULL,
+	`KickoffTime` DateTime(6) NULL,
+	`TeamHScore` TINYINT(3) NOT NULL,
+	`TeamAScore` TINYINT(3) NOT NULL,
+	`Round` TINYINT(3) NOT NULL,
+	`Minutes` TINYINT(3) NOT NULL,
+	`GoalsScored` TINYINT(3) NOT NULL,
+	`Assists` TINYINT(3) NOT NULL,
+	`CleanSheets` TINYINT(3) NOT NULL,
+	`GoalsConceded` TINYINT(3) NOT NULL,
+	`OwnGoals` TINYINT(3) NOT NULL,
+	`PenaltiesSaved` TINYINT(3) NOT NULL,
+	`PenaltiesMissed` TINYINT(3) NOT NULL,
+	`YellowCards` TINYINT(3) NOT NULL,
+	`RedCards` TINYINT(3) NOT NULL,
+	`Saves` TINYINT(3) NOT NULL,
+	`Bonus` TINYINT(3) NOT NULL,
+	`BPS` TINYINT(3) NOT NULL,
+	`Influence` DECIMAL(5,2)  NOT NULL,
+	`Creativity` DECIMAL(5,2) NOT NULL,
+	`Threat` DECIMAL(5,2) NOT NULL,
+	`ICTndex` DECIMAL(5,2) NOT NULL,
+	`Price` DECIMAL(5,2) NOT NULL,
+	`TransfersBalance` INT(3) NOT NULL,
+	`Selected` INT(11) NOT NULL,
+	`TransfersIn` INT(11) NOT NULL,
+	`TransfersOut` INT(11) NOT NULL,
+	PRIMARY KEY (`Id`),
+	FOREIGN KEY (`PlayerId`) REFERENCES PLAYERS(`Id`)
+)
+COLLATE='utf8mb4_unicode_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT = 1;
+;
+
+
+>>> 
+
+USE FPLDatabase;
+
+CREATE TABLE `FIXTURES` (
+	`Id` INT(11) NOT NULL AUTO_INCREMENT,
+	`Code` INT(11) NOT NULL,
+	`TeamH` TINYINT(3) NOT NULL,
+	`TeamHScore` TINYINT(3) NOT NULL,
+	`TeamA` TINYINT(3) NOT NULL,
+	`TeamAScore` TINYINT(3) NULL,
+	`Finished` TINYINT(3) NOT NULL,
+	`Minutes` TINYINT(3) NOT NULL,
+	`ProvisionalStartTime` TINYINT(3) NOT NULL,
+	`KickoffTime` DATETIME(6) NOT NULL,
+	`EventName` VARCHAR(30) NOT NULL,
+	`IsHome` TINYINT(3) NOT NULL,
+	`Difficulty` TINYINT(3) NOT NULL,
+	PRIMARY KEY (`Id`)
+)
+COLLATE='utf8mb4_unicode_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT = 1;
+;

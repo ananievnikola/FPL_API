@@ -1,18 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
-using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using TopkaE.FPLDataDownloader.DBContext;
 using TopkaE.FPLDataDownloader.HttpRequests.Requesters;
 using TopkaE.FPLDataDownloader.Models.InputModels;
 using TopkaE.FPLDataDownloader.Utilities;
@@ -25,21 +20,17 @@ namespace TopkaE.FPLDataDownloader.Controllers
     {
         private readonly IRequester _playerRequester;
         private readonly IRequester _playerSummaryRequester;
-        private readonly TopkaEContext _context;
         private HttpClient _client;
         private readonly RequesterFactory _requesterFactory;
         private readonly string _connectionString;
 
-        public UpdateController(TopkaEContext context, IHttpClientFactory clientFactory, IConfiguration config)
+        public UpdateController(IHttpClientFactory clientFactory, IConfiguration config)
         {
             _client = clientFactory.CreateClient();
             _requesterFactory = new RequesterFactory();
             _playerRequester = _requesterFactory.CreaterRequester(EBasicRequestType.GeneralDataRequester, _client);
             _playerSummaryRequester = _requesterFactory.CreaterRequester(EBasicRequestType.PlayerSummaryRequester, _client);
-            _context = context;
             _connectionString = config["MariaDBConnection"];
-            //    Configuration = config;
-            //_connectionString = Configuration["MariaDBConnection"];
         }
 
         [HttpGet]
@@ -47,7 +38,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
         [Route("UpdateAll")]
         public async Task<bool> UpdateAll()
         {
-            bool result = await UpdatePlayersNew();
+            bool result = await UpdatePlayers();
 
             //Dictionary<string, bool> aggregateResults = new Dictionary<string, bool>();
             //bool playersResult = await UpdatePlayers();
@@ -57,13 +48,13 @@ namespace TopkaE.FPLDataDownloader.Controllers
             return result;
         }
 
-        private async Task<bool> UpdatePlayersNew()
+        private async Task<bool> UpdatePlayers()
         {
             bool result = true;
             string resp = await _playerRequester.ExecuteRequest();
             if (!string.IsNullOrEmpty(resp))
             {
-                GeneralDataModelNew gdm = JsonConvert.DeserializeObject<GeneralDataModelNew>(resp);
+                GeneralDataModel gdm = JsonConvert.DeserializeObject<GeneralDataModel>(resp);
                 if (gdm == null || gdm.Players == null)
                 {
                     //log ex
@@ -74,8 +65,16 @@ namespace TopkaE.FPLDataDownloader.Controllers
                     //things to do before insert
                     //NowCost, last updated, team name
                     List<Player> players = gdm.Players;
+                    DateTime time = DateTime.Now;
+                    foreach (var player in players)
+                    {
+                        player.LastUpdated = time;
+                        player.TeamName = PlayersUtilities.GetTeamName(player.TeamCode);
+                    }
                     this.DeleteAllPlayers();
                     this.InsertPlayers(players);
+                    List<HistoryAndFixtures> historyAndFixtures = await this.DownloadFixturesAndResults(players);
+                    //List<int> dbIds = this.GetIds().ToList();
                 }
             }
             return result;
@@ -88,7 +87,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
                 using (MySqlConnection sqlConnection = new MySqlConnection(_connectionString))
                 {
                     sqlConnection.Open();
-                    MySqlCommand deleteCommand = new MySqlCommand("SP_Players_DeleteAll", sqlConnection);
+                    MySqlCommand deleteCommand = new MySqlCommand("fpldatabase.SP_Players_DeleteAll", sqlConnection);
                     deleteCommand.CommandType = CommandType.StoredProcedure;
                     MySqlTransaction deleteTransaction = sqlConnection.BeginTransaction();
                     deleteCommand.Transaction = deleteTransaction;
@@ -104,6 +103,25 @@ namespace TopkaE.FPLDataDownloader.Controllers
                            
         }
 
+        //public IEnumerable<int> GetIds()
+        //{
+        //    List<int> ids = new List<int>();
+        //    using (MySqlConnection conn = new MySqlConnection(_connectionString))
+        //    {
+        //        conn.Open();
+        //        MySqlCommand cmd = new MySqlCommand("fpldatabase.SP_Players_GetIds", conn);
+        //        cmd.CommandType = CommandType.StoredProcedure;
+        //        using (var reader = cmd.ExecuteReader())
+        //        {
+        //            while (reader.Read())
+        //            {
+        //                ids.Add(reader.GetInt32("Id"));
+        //            }
+        //        }
+        //    }
+        //    return ids;
+        //}
+
         private void InsertPlayers(List<Player> players)
         {
             try
@@ -115,7 +133,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
                     MySqlTransaction transaction = sqlConnection.BeginTransaction();
                     foreach (Player player in players)
                     {
-                        MySqlCommand sqlCommand = new MySqlCommand("SP_Players_Insert", sqlConnection);
+                        MySqlCommand sqlCommand = new MySqlCommand("fpldatabase.SP_Players_Insert", sqlConnection);
                         sqlCommand.CommandType = CommandType.StoredProcedure;
                         sqlCommand.Parameters.AddWithValue("ChanceOfPlayingNextRound", player.ChanceOfPlayingNextRound);
                         sqlCommand.Parameters.AddWithValue("ChanceOfPlayingThisRound", player.ChanceOfPlayingThisRound);
@@ -184,78 +202,7 @@ namespace TopkaE.FPLDataDownloader.Controllers
 
         }
 
-
-        private async Task<bool> UpdatePlayers()
-        {
-            bool result = true;
-            string resp = await _playerRequester.ExecuteRequest();
-            if (!string.IsNullOrEmpty(resp))
-            {
-                GeneralDataModel gdm = JsonConvert.DeserializeObject<GeneralDataModel>(resp);
-                if (gdm == null || gdm.Players == null)
-                {
-                    //log ex
-                    result = false;
-                }
-                else
-                {
-                    List<Element> players = gdm.Players;
-                    //List<int> ids = new List<int>();
-                    if (players != null && players.Count > 0) //
-                    {
-                        List<Element> playersFromDB = await _context.Elements?.AsNoTracking()?.ToListAsync();
-                        if (playersFromDB == null || playersFromDB.Count == 0)
-                        {
-                            DateTime time = DateTime.Now;
-                            foreach (var player in players)
-                            {
-                                player.LastUpdated = time;
-                                player.TeamName = PlayersUtilities.GetTeamName(player.TeamCode);
-                            }                           
-                            _context.AddRange(players);
-                            List<HistoryAndFixtures> historyAndFixtures = await this.DownloadFixturesAndResults(players);
-                            foreach (var fixOrRes in historyAndFixtures)
-                            {
-                                fixOrRes.Fixtures.ForEach(i => i.ElementId = fixOrRes.Id);
-                                fixOrRes.History.ForEach(i => i.ElementId = fixOrRes.Id);
-                                _context.AddRange(fixOrRes.Fixtures);
-                                _context.AddRange(fixOrRes.History);
-                            }
-                            _context.SaveChanges();
-                            result = true;
-                        }
-                        else if (playersFromDB != null)
-                        {
-                            foreach (var player in players)
-                            {
-                                player.LastUpdated = DateTime.Now;
-                                player.TeamName = PlayersUtilities.GetTeamName(player.TeamCode);
-                                Element currentDbPlayer = playersFromDB.FirstOrDefault(p => p.Id == player.Id);
-                                if (currentDbPlayer != null)
-                                {
-                                    _context.Update(player);
-                                }
-                                else
-                                {
-                                    _context.Add(player);
-                                }
-                                _context.SaveChanges();
-                                await this.DownloadFixturesAndResults(players);
-                                result = true;
-                            }
-                        }
-                        _context.SaveChanges();
-                    }
-                    else
-                    {
-                        result = false;
-                    }
-                }
-            }
-            return result;
-        }
-
-        private async Task<List<HistoryAndFixtures>> DownloadFixturesAndResults(List<Element> players)
+        private async Task<List<HistoryAndFixtures>> DownloadFixturesAndResults(List<Player> players)
         {
             List<Task<string>> responses = new List<Task<string>>();
             List<int> ids = players.Select(p => p.Id).ToList();
@@ -269,20 +216,48 @@ namespace TopkaE.FPLDataDownloader.Controllers
             List<HistoryAndFixtures> resAsList = new List<HistoryAndFixtures>();
             foreach (var item in res)
             {
-                HistoryAndFixtures currentFixture = JsonConvert.DeserializeObject<HistoryAndFixtures>(item);
-                foreach (var fixture in currentFixture.Fixtures)
+                try
                 {
-                    fixture.ElementId = currentFixture.Id;
+                    HistoryAndFixtures currentFixture = JsonConvert.DeserializeObject<HistoryAndFixtures>(item);
+                    resAsList.Add(JsonConvert.DeserializeObject<HistoryAndFixtures>(item));
                 }
-                foreach (var history in currentFixture.History)
+                catch (Exception ex)
                 {
-                    history.ElementId = currentFixture.Id;
-                }
-                resAsList.Add(JsonConvert.DeserializeObject<HistoryAndFixtures>(item));
 
+                    throw;
+                }
             }
             return resAsList;
         }
+
+        //private async Task<List<HistoryAndFixtures>> DownloadFixturesAndResults(List<Element> players)
+        //{
+        //    List<Task<string>> responses = new List<Task<string>>();
+        //    List<int> ids = players.Select(p => p.Id).ToList();
+        //    foreach (var id in ids)
+        //    {
+        //        int loopId = id;
+        //        PlayerSummaryRequester psr = new PlayerSummaryRequester(_client);
+        //        responses.Add(psr.ExecuteRequest(loopId));
+        //    }
+        //    string[] res = await Task.WhenAll(responses);
+        //    List<HistoryAndFixtures> resAsList = new List<HistoryAndFixtures>();
+        //    foreach (var item in res)
+        //    {
+        //        HistoryAndFixtures currentFixture = JsonConvert.DeserializeObject<HistoryAndFixtures>(item);
+        //        //foreach (var fixture in currentFixture.Fixtures)
+        //        //{
+        //        //    fixture.ElementId = currentFixture.Id;
+        //        //}
+        //        //foreach (var history in currentFixture.History)
+        //        //{
+        //        //    history.ElementId = currentFixture.Id;
+        //        //}
+        //        resAsList.Add(JsonConvert.DeserializeObject<HistoryAndFixtures>(item));
+
+        //    }
+        //    return resAsList;
+        //}
 
         private class HistoryAndFixtures
         {

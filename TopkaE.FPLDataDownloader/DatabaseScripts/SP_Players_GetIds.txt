@@ -1,0 +1,14 @@
+﻿DELIMITER //
+
+USE FPLDatabase;
+
+CREATE OR REPLACE PROCEDURE SP_Players_GetIds()
+
+BEGIN
+
+   SELECT 
+   	p.Id
+	FROM PLAYERS p;
+END; //
+
+DELIMITER ;

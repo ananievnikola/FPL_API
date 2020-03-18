@@ -7,21 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200114133149_summarytableremoved2.cs" />
-    <Compile Remove="Migrations\20200114133149_summarytableremoved2.Designer.cs" />
-    <Compile Remove="Migrations\20200205162154_charsetattr.cs" />
-    <Compile Remove="Migrations\20200205162154_charsetattr.Designer.cs" />
-    <Compile Remove="Migrations\20200205162723_charsetFix.cs" />
-    <Compile Remove="Migrations\20200205162723_charsetFix.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.6" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.2.0" />
+    <PackageReference Include="MySql.Data" Version="8.0.19" />
     <PackageReference Include="ServiceStack.Text" Version="5.7.0" />
   </ItemGroup>
 

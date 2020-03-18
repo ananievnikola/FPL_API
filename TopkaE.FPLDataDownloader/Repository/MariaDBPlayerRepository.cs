@@ -19,13 +19,13 @@ namespace TopkaE.FPLDataDownloader.Repository
 
         public IConfiguration Configuration { get; }
 
-        public IEnumerable<Element> GetAll(int? points, string team)
+        public IEnumerable<Player> GetAll(int? points)
         {
-            List<Element> players = new List<Element>();
+            List<Player> players = new List<Player>();
             using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SP_Players_GetAll", conn);
+                MySqlCommand cmd = new MySqlCommand("fpldatabase.SP_Players_GetAll", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -38,13 +38,13 @@ namespace TopkaE.FPLDataDownloader.Repository
             return players;
         }
 
-        public Element GetById(int id)
+        public Player GetById(int id)
         {
-            Element player = null;
+            Player player = null;
             using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SP_Players_GetById", conn);
+                MySqlCommand cmd = new MySqlCommand("fpldatabase.SP_Players_GetById", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@PlayerId", id);
                 using (var reader = cmd.ExecuteReader())
@@ -64,7 +64,7 @@ namespace TopkaE.FPLDataDownloader.Repository
             using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SP_Players_MostTransferedIn", conn);
+                MySqlCommand cmd = new MySqlCommand("fpldatabase.SP_Players_MostTransferedIn", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Top", top);
                 using (var reader = cmd.ExecuteReader())
@@ -84,7 +84,7 @@ namespace TopkaE.FPLDataDownloader.Repository
             using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SP_Players_MostTransferedOut", conn);
+                MySqlCommand cmd = new MySqlCommand("fpldatabase.SP_Players_MostTransferedOut", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Top", top);
                 using (var reader = cmd.ExecuteReader())
@@ -104,7 +104,7 @@ namespace TopkaE.FPLDataDownloader.Repository
             using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SP_Players_MostGoals", conn);
+                MySqlCommand cmd = new MySqlCommand("fpldatabase.SP_Players_MostGoals", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Top", top);
                 using (var reader = cmd.ExecuteReader())
@@ -124,7 +124,7 @@ namespace TopkaE.FPLDataDownloader.Repository
             using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SP_Players_MostGoalsForTeam", conn);
+                MySqlCommand cmd = new MySqlCommand("fpldatabase.SP_Players_MostGoalsForTeam", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 using (var reader = cmd.ExecuteReader())
                 {
@@ -143,7 +143,7 @@ namespace TopkaE.FPLDataDownloader.Repository
             using (MySqlConnection conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand("SP_Players_MostGoalsInvovement", conn);
+                MySqlCommand cmd = new MySqlCommand("fpldatabase.SP_Players_MostGoalsInvovement", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Top", top);
                 using (var reader = cmd.ExecuteReader())
@@ -158,68 +158,63 @@ namespace TopkaE.FPLDataDownloader.Repository
         }
 
         //If it is not too slow - refactor to use reflection instead
-        private Element MapElement(MySqlDataReader reader)
+        private Player MapElement(MySqlDataReader reader)
         {
-            Element currentPlayer = new Element();
+            Player currentPlayer = new Player();
             currentPlayer.Id = reader.GetInt32("Id");
-            currentPlayer.ChanceOfPlayingNextRound = reader.SaveReadInt32("ChanceOfPlayingNextRound");
-            currentPlayer.ChanceOfPlayingThisRound = reader.SaveReadInt32("ChanceOfPlayingThisRound");
+            currentPlayer.ChanceOfPlayingNextRound = reader.SaveReadSByte("ChanceOfPlayingNextRound");
+            currentPlayer.ChanceOfPlayingThisRound = reader.SaveReadSByte("ChanceOfPlayingThisRound");
             currentPlayer.Code = reader.GetInt32("Code");
-            currentPlayer.CostChangeEvent = reader.GetInt32("CostChangeEvent");
-            currentPlayer.CostChangeEventFall = reader.GetInt32("CostChangeEventFall");
-            currentPlayer.CostChangeStart = reader.GetInt32("CostChangeStart");
-            currentPlayer.CostChangeStartFall = reader.GetInt32("CostChangeStartFall");
-            currentPlayer.DreamteamCount = reader.GetInt32("DreamteamCount");
-            currentPlayer.ElementType = reader.GetInt32("ElementType");
-            currentPlayer.EpNext = reader.GetString("EpNext");
-            currentPlayer.EpThis = reader.GetString("EpThis");
-            currentPlayer.EventPoints = reader.GetInt32("EventPoints");
+            currentPlayer.CostChangeEvent = reader.GetInt16("CostChangeEvent");
+            currentPlayer.CostChangeEventFall = reader.GetInt16("CostChangeEventFall");
+            currentPlayer.CostChangeStart = reader.GetInt16("CostChangeStart");
+            currentPlayer.CostChangeStartFall = reader.GetInt16("CostChangeStartFall");
+            currentPlayer.DreamteamCount = reader.GetByte("DreamteamCount");
+            currentPlayer.ElementType = reader.GetByte("ElementType");
+            currentPlayer.EpNext = reader.GetFloat("EpNext");
+            currentPlayer.EpThis = reader.GetFloat("EpThis");
+            currentPlayer.EventPoints = reader.GetSByte("EventPoints");
             currentPlayer.FirstName = reader.GetString("FirstName");
-            currentPlayer.Form = reader.GetString("Form");
+            currentPlayer.Form = reader.GetFloat("Form");
             currentPlayer.InDreamteam = reader.GetBoolean("InDreamteam");
             currentPlayer.News = reader.GetString("News");
             currentPlayer.NewsAdded = reader.SaveReadDateTime("NewsAdded");//reader.GetDateTime("NewsAdded");
             currentPlayer.NowCost = reader.GetInt32("NowCost");
             currentPlayer.Photo = reader.GetString("Photo");
             //Change to double
-            currentPlayer.PointsPerGame = reader.GetString("PointsPerGame");
+            currentPlayer.PointsPerGame = reader.GetFloat("PointsPerGame");
             currentPlayer.SecondName = reader.GetString("SecondName");
             //Change to double
-            currentPlayer.SelectedByPercent = reader.GetString("SelectedByPercent");
+            currentPlayer.SelectedByPercent = reader.GetFloat("SelectedByPercent");
             currentPlayer.Special = reader.GetBoolean("Special");
             currentPlayer.Status = reader.GetString("Status");
             //Review this field. It should be int but it is changed to string in the model (quick fix)
             currentPlayer.Team = reader.GetString("Team");
-            currentPlayer.TeamCode = reader.GetInt32("TeamCode");
-            currentPlayer.TotalPoints = reader.GetInt32("TotalPoints");
+            currentPlayer.TeamCode = reader.GetByte("TeamCode");
+            currentPlayer.TotalPoints = reader.GetInt16("TotalPoints");
             currentPlayer.TransfersIn = reader.GetInt32("TransfersIn");
             currentPlayer.TransfersInEvent = reader.GetInt32("TransfersInEvent");
             currentPlayer.TransfersOut = reader.GetInt32("TransfersOut");
             currentPlayer.TransfersOutEvent = reader.GetInt32("TransfersOutEvent");
-            //Change to double
-            currentPlayer.ValueForm = reader.GetString("ValueForm");
-            //Change to double
-            currentPlayer.ValueSeason = reader.GetString("ValueSeason");
+            currentPlayer.ValueForm = reader.GetFloat("ValueForm");
+            currentPlayer.ValueSeason = reader.GetFloat("ValueSeason");
             currentPlayer.WebName = reader.GetString("WebName");
-            currentPlayer.Minutes = reader.GetInt32("Minutes");
-            currentPlayer.GoalsScored = reader.GetInt32("GoalsScored");
-            currentPlayer.Assists = reader.GetInt32("Assists");
-            currentPlayer.CleanSheets = reader.GetInt32("CleanSheets");
-            currentPlayer.GoalsConceded = reader.GetInt32("GoalsConceded");
-            currentPlayer.OwnGoals = reader.GetInt32("OwnGoals");
-            currentPlayer.PenaltiesSaved = reader.GetInt32("PenaltiesSaved");
-            currentPlayer.PenaltiesMissed = reader.GetInt32("PenaltiesMissed");
-            currentPlayer.YellowCards = reader.GetInt32("YellowCards");
-            currentPlayer.RedCards = reader.GetInt32("RedCards");
-            currentPlayer.Saves = reader.GetInt32("Saves");
-            currentPlayer.Bonus = reader.GetInt32("Bonus");
+            currentPlayer.Minutes = reader.GetInt16("Minutes");
+            currentPlayer.GoalsScored = reader.GetByte("GoalsScored");
+            currentPlayer.Assists = reader.GetByte("Assists");
+            currentPlayer.CleanSheets = reader.GetByte("CleanSheets");
+            currentPlayer.GoalsConceded = reader.GetByte("GoalsConceded");
+            currentPlayer.OwnGoals = reader.GetByte("OwnGoals");
+            currentPlayer.PenaltiesSaved = reader.GetByte("PenaltiesSaved");
+            currentPlayer.PenaltiesMissed = reader.GetByte("PenaltiesMissed");
+            currentPlayer.YellowCards = reader.GetByte("YellowCards");
+            currentPlayer.RedCards = reader.GetByte("RedCards");
+            currentPlayer.Saves = reader.GetByte("Saves");
+            currentPlayer.Bonus = reader.GetByte("Bonus");
             currentPlayer.Bps = reader.GetInt32("Bps");
-            //Change to double
-            currentPlayer.Influence = reader.GetString("Influence");
-            //Change to double
-            currentPlayer.Creativity = reader.GetString("Creativity");
-            //Change to double
-            currentPlayer.IctIndex = reader.GetString("IctIndex");
+            currentPlayer.Influence = reader.GetFloat("Influence");
+            currentPlayer.Creativity = reader.GetFloat("Creativity");
+            currentPlayer.IctIndex = reader.GetFloat("IctIndex");
             currentPlayer.TeamName = reader.GetString("TeamName");
             return currentPlayer;
         }
@@ -258,5 +253,7 @@ namespace TopkaE.FPLDataDownloader.Repository
             }
             return player;
         }
+
+
     }
 }
